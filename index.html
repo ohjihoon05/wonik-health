@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wonik Health</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 20px;
+            padding: 60px;
+            box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.4);
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #fff, #f0f0f0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+
+        .status {
+            font-size: 1.1rem;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .success {
+            color: #4ade80;
+            font-weight: bold;
+        }
+
+        .version-info {
+            margin-top: 40px;
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        .emoji {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .test-btn {
+            background: linear-gradient(145deg, #4ade80, #22c55e);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(34, 197, 94, 0.3);
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .test-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(34, 197, 94, 0.4);
+        }
+
+        .test-btn:active {
+            transform: translateY(0);
+        }
+
+        /* 약물 관리 스타일 */
+        .medication-form, .medication-list {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .medication-form h3, .medication-list h3 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: #fff;
+            text-align: center;
+        }
+
+        .form-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .form-input {
+            padding: 12px 15px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+            backdrop-filter: blur(10px);
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .add-btn {
+            background: linear-gradient(145deg, #3b82f6, #2563eb);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .add-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+        }
+
+        .medication-item {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .medication-info {
+            flex: 1;
+        }
+
+        .medication-name {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .medication-details {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .delete-btn {
+            background: linear-gradient(145deg, #ef4444, #dc2626);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .delete-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+        }
+
+        .empty-state {
+            text-align: center;
+            opacity: 0.7;
+            padding: 30px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="emoji">🏥</div>
+        <h1>Wonik Health</h1>
+        <p class="subtitle">질병별 맞춤 업무 스케줄링 앱</p>
+        
+        <div class="status">
+            <div class="success">✅ Phase 2 진행 중!</div>
+            <p>약물을 추가하고 관리해보세요!</p>
+        </div>
+
+        <!-- 약물 추가 폼 -->
+        <div class="medication-form">
+            <h3>💊 새 약물 추가</h3>
+            <div class="form-group">
+                <input type="text" id="medication-name" placeholder="약물 이름 (예: 아모잘탄)" class="form-input">
+                <input type="text" id="medication-dosage" placeholder="용량 (예: 5mg)" class="form-input">
+                <input type="time" id="medication-time" class="form-input">
+                <button id="add-medication-btn" class="add-btn">추가</button>
+            </div>
+        </div>
+
+        <!-- 약물 목록 -->
+        <div class="medication-list">
+            <h3>📋 등록된 약물 <span id="medication-count">(0개)</span></h3>
+            <div id="medications-container">
+                <div class="empty-state">
+                    아직 등록된 약물이 없습니다.<br>
+                    위에서 약물을 추가해보세요!
+                </div>
+            </div>
+        </div>
+
+        <div class="test-buttons">
+            <button id="notification-btn" class="test-btn">
+                💊 알림 테스트
+            </button>
+        </div>
+
+        <div class="version-info">
+            <p>버전: 1.0.0-alpha</p>
+            <p>개발자: 지훈 (원익IPS UX 디자이너)</p>
+            <p>Electron 기반 데스크톱 애플리케이션</p>
+        </div>
+    </div>
+
+    <script src="storage.js"></script>
+    <script>
+        // 간단한 로그 출력
+        console.log('🚀 Wonik Health 앱이 로드되었습니다!');
+        
+        // 저장소 확인
+        if (window.medicationStorage) {
+            console.log('✅ 약물 저장소가 사용 가능합니다!');
+        } else {
+            console.log('❌ 약물 저장소를 찾을 수 없습니다.');
+        }
+        
+        // 알림 기능 구현
+        document.getElementById('notification-btn').addEventListener('click', () => {
+            console.log('💊 알림 버튼이 클릭되었습니다!');
+            
+            // Windows 알림 생성
+            const notification = new Notification('💊 Wonik Health 알림', {
+                body: '약물 복용 시간입니다!\n혈압약 (아모잘탄 5mg) 복용하세요.',
+                icon: './assets/medicine-icon.png', // 아이콘이 없어도 괜찮습니다
+                tag: 'medicine-reminder',
+                requireInteraction: true // 사용자가 확인할 때까지 유지
+            });
+
+            // 알림 클릭 이벤트
+            notification.onclick = () => {
+                console.log('✅ 알림을 클릭했습니다!');
+                alert('알림 기능이 정상적으로 작동합니다! 🎉');
+                notification.close();
+            };
+
+            // 알림이 표시될 때
+            notification.onshow = () => {
+                console.log('📢 알림이 표시되었습니다!');
+            };
+
+            // 성공 피드백
+            const button = document.getElementById('notification-btn');
+            const originalText = button.innerHTML;
+            button.innerHTML = '✅ 알림 전송됨!';
+            button.style.background = 'linear-gradient(145deg, #22c55e, #16a34a)';
+            
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.style.background = 'linear-gradient(145deg, #4ade80, #22c55e)';
+            }, 2000);
+        });
+
+        // 알림 권한 요청
+        if ('Notification' in window) {
+            if (Notification.permission === 'default') {
+                Notification.requestPermission().then(permission => {
+                    if (permission === 'granted') {
+                        console.log('✅ 알림 권한이 허용되었습니다!');
+                    } else {
+                        console.log('❌ 알림 권한이 거부되었습니다.');
+                    }
+                });
+            }
+        }
+        
+        // 약물 관리 기능
+        let medications = [];
+
+        // 약물 추가 기능
+        document.getElementById('add-medication-btn').addEventListener('click', async () => {
+            const name = document.getElementById('medication-name').value.trim();
+            const dosage = document.getElementById('medication-dosage').value.trim();
+            const time = document.getElementById('medication-time').value;
+
+            if (!name) {
+                alert('약물 이름을 입력해주세요!');
+                return;
+            }
+
+            console.log('💊 약물 추가 시도:', { name, dosage, time });
+
+            try {
+                const result = window.medicationStorage.add({
+                    name: name,
+                    dosage: dosage,
+                    time: time,
+                    notes: ''
+                });
+
+                if (result.success) {
+                    console.log('✅ 약물이 성공적으로 추가되었습니다!');
+                    
+                    // 폼 초기화
+                    document.getElementById('medication-name').value = '';
+                    document.getElementById('medication-dosage').value = '';
+                    document.getElementById('medication-time').value = '';
+                    
+                    // 목록 새로고침
+                    loadMedications();
+                    
+                    // 성공 알림
+                    alert(`✅ "${name}" 약물이 추가되었습니다!`);
+                } else {
+                    console.error('❌ 약물 추가 실패:', result.error);
+                    alert('약물 추가에 실패했습니다. 다시 시도해주세요.');
+                }
+            } catch (error) {
+                console.error('❌ 오류 발생:', error);
+                alert('오류가 발생했습니다. 다시 시도해주세요.');
+            }
+        });
+
+        // 약물 목록 로드
+        function loadMedications() {
+            try {
+                console.log('📋 약물 목록을 불러오는 중...');
+                medications = window.medicationStorage.getAll();
+                console.log('불러온 약물 목록:', medications);
+                renderMedications();
+                updateMedicationCount();
+            } catch (error) {
+                console.error('❌ 약물 목록 로드 실패:', error);
+            }
+        }
+
+        // 약물 목록 렌더링
+        function renderMedications() {
+            const container = document.getElementById('medications-container');
+            
+            if (medications.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        아직 등록된 약물이 없습니다.<br>
+                        위에서 약물을 추가해보세요!
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = medications.map(med => `
+                <div class="medication-item">
+                    <div class="medication-info">
+                        <div class="medication-name">💊 ${med.name}</div>
+                        <div class="medication-details">
+                            ${med.dosage ? `용량: ${med.dosage}` : ''} 
+                            ${med.time ? `복용시간: ${med.time}` : ''}
+                        </div>
+                    </div>
+                    <button class="delete-btn" onclick="deleteMedication(${med.id})">
+                        🗑️ 삭제
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        // 약물 삭제
+        function deleteMedication(id) {
+            if (!confirm('정말로 이 약물을 삭제하시겠습니까?')) {
+                return;
+            }
+
+            try {
+                console.log('🗑️ 약물 삭제 시도:', id);
+                const result = window.medicationStorage.delete(id);
+                
+                if (result.success) {
+                    console.log('✅ 약물이 삭제되었습니다!');
+                    loadMedications();
+                    alert('약물이 삭제되었습니다.');
+                } else {
+                    console.error('❌ 약물 삭제 실패:', result.error);
+                    alert('약물 삭제에 실패했습니다.');
+                }
+            } catch (error) {
+                console.error('❌ 오류 발생:', error);
+                alert('오류가 발생했습니다.');
+            }
+        }
+
+        // 약물 개수 업데이트
+        function updateMedicationCount() {
+            const count = medications.length;
+            document.getElementById('medication-count').textContent = `(${count}개)`;
+        }
+
+        // 페이지 로드 시 약물 목록 불러오기
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                if (window.medicationStorage) {
+                    loadMedications();
+                    console.log('💊 Phase 2: 약물 관리 기능이 준비되었습니다!');
+                }
+            }, 500);
+        });
+    </script>
+</body>
+</html>
