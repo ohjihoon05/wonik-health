@@ -198,6 +198,133 @@
             padding: 30px;
             font-style: italic;
         }
+
+        /* 알림 테스트 스타일 */
+        .notification-test {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .notification-test h3 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: #fff;
+            text-align: center;
+        }
+
+        .test-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .test-controls label {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        #test-delay {
+            padding: 10px 15px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+            backdrop-filter: blur(10px);
+        }
+
+        #test-delay option {
+            background: #333;
+            color: white;
+        }
+
+        .schedule-btn {
+            background: linear-gradient(145deg, #f59e0b, #d97706);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .schedule-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(245, 158, 11, 0.4);
+        }
+
+        .scheduled-list {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .scheduled-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 12px;
+            margin: 8px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .scheduled-info {
+            flex: 1;
+        }
+
+        .countdown {
+            font-weight: bold;
+            color: #f59e0b;
+            margin-left: 10px;
+        }
+
+        .cancel-btn {
+            background: rgba(239, 68, 68, 0.8);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .cancel-btn:hover {
+            background: rgba(239, 68, 68, 1);
+        }
+
+        .schedule-med-btn {
+            background: linear-gradient(145deg, #10b981, #059669);
+            color: white;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            margin-left: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .schedule-med-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.4);
+        }
     </style>
 </head>
 <body>
@@ -207,8 +334,8 @@
         <p class="subtitle">질병별 맞춤 업무 스케줄링 앱</p>
         
         <div class="status">
-            <div class="success">✅ Phase 2 진행 중!</div>
-            <p>약물을 추가하고 관리해보세요!</p>
+            <div class="success">✅ Phase 3 진행 중!</div>
+            <p>약물 알림을 설정해보세요!</p>
         </div>
 
         <!-- 약물 추가 폼 -->
@@ -233,9 +360,29 @@
             </div>
         </div>
 
+        <!-- 알림 테스트 영역 -->
+        <div class="notification-test">
+            <h3>⏰ 알림 테스트</h3>
+            <div class="test-controls">
+                <label>알림 예약 (초 단위):</label>
+                <select id="test-delay">
+                    <option value="5">5초 후</option>
+                    <option value="10">10초 후</option>
+                    <option value="30">30초 후</option>
+                    <option value="60">1분 후</option>
+                </select>
+                <button id="schedule-test-btn" class="schedule-btn">
+                    ⏰ 알림 예약
+                </button>
+            </div>
+            <div id="scheduled-notifications" class="scheduled-list">
+                <!-- 예약된 알림이 여기 표시됩니다 -->
+            </div>
+        </div>
+
         <div class="test-buttons">
             <button id="notification-btn" class="test-btn">
-                💊 알림 테스트
+                💊 즉시 알림 테스트
             </button>
         </div>
 
@@ -388,6 +535,7 @@
                         <div class="medication-details">
                             ${med.dosage ? `용량: ${med.dosage}` : ''} 
                             ${med.time ? `복용시간: ${med.time}` : ''}
+                            ${med.time ? `<button class="schedule-med-btn" onclick="scheduleSpecificMedication(${med.id}, '${med.name}', '${med.dosage || ''}', '${med.time}')">⏰ 알림 설정</button>` : ''}
                         </div>
                     </div>
                     <button class="delete-btn" onclick="deleteMedication(${med.id})">
@@ -427,12 +575,209 @@
             document.getElementById('medication-count').textContent = `(${count}개)`;
         }
 
+        // 알림 스케줄러 기능
+        let scheduledNotifications = [];
+        let notificationIdCounter = 1;
+
+        // 알림 예약 버튼 클릭
+        document.getElementById('schedule-test-btn').addEventListener('click', () => {
+            const delay = parseInt(document.getElementById('test-delay').value);
+            const notificationId = notificationIdCounter++;
+            
+            const scheduledTime = new Date();
+            scheduledTime.setSeconds(scheduledTime.getSeconds() + delay);
+            
+            const notification = {
+                id: notificationId,
+                scheduledTime: scheduledTime,
+                delay: delay,
+                medication: medications[0] || { name: '테스트 약물', dosage: '5mg' }
+            };
+            
+            scheduledNotifications.push(notification);
+            
+            // 타이머 설정
+            notification.timeoutId = setTimeout(() => {
+                showScheduledNotification(notification);
+                removeScheduledNotification(notification.id);
+            }, delay * 1000);
+            
+            // 카운트다운 시작
+            startCountdown(notification);
+            
+            // UI 업데이트
+            updateScheduledList();
+            
+            // 성공 피드백
+            alert(`✅ 알림이 ${delay}초 후에 예약되었습니다!`);
+            console.log(`⏰ 알림 예약됨: ${delay}초 후`);
+        });
+
+        // 예약된 알림 표시
+        function showScheduledNotification(notification) {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
+            
+            const windowsNotification = new Notification('💊 Wonik Health - 약물 복용 시간', {
+                body: `${notification.medication.name} ${notification.medication.dosage || ''}\n복용 시간입니다! (${timeStr})`,
+                icon: './assets/medicine-icon.png',
+                tag: `medication-${notification.id}`,
+                requireInteraction: true
+            });
+
+            windowsNotification.onclick = () => {
+                console.log('✅ 예약된 알림을 클릭했습니다!');
+                alert('약물을 복용하셨나요? 건강한 하루 되세요! 💪');
+                windowsNotification.close();
+            };
+
+            console.log(`🔔 예약된 알림이 표시되었습니다! (${timeStr})`);
+        }
+
+        // 카운트다운 시작
+        function startCountdown(notification) {
+            notification.intervalId = setInterval(() => {
+                const now = new Date();
+                const remaining = Math.max(0, Math.floor((notification.scheduledTime - now) / 1000));
+                
+                if (remaining <= 0) {
+                    clearInterval(notification.intervalId);
+                }
+                
+                updateScheduledList();
+            }, 1000);
+        }
+
+        // 예약된 알림 제거
+        function removeScheduledNotification(id) {
+            const index = scheduledNotifications.findIndex(n => n.id === id);
+            if (index > -1) {
+                const notification = scheduledNotifications[index];
+                
+                // 타이머 취소
+                if (notification.timeoutId) {
+                    clearTimeout(notification.timeoutId);
+                }
+                if (notification.intervalId) {
+                    clearInterval(notification.intervalId);
+                }
+                
+                scheduledNotifications.splice(index, 1);
+                updateScheduledList();
+            }
+        }
+
+        // 예약 목록 UI 업데이트
+        function updateScheduledList() {
+            const container = document.getElementById('scheduled-notifications');
+            
+            if (scheduledNotifications.length === 0) {
+                container.innerHTML = '<div class="empty-state">예약된 알림이 없습니다.</div>';
+                return;
+            }
+            
+            container.innerHTML = scheduledNotifications.map(notification => {
+                const now = new Date();
+                const remaining = Math.max(0, Math.floor((notification.scheduledTime - now) / 1000));
+                const minutes = Math.floor(remaining / 60);
+                const seconds = remaining % 60;
+                const timeStr = minutes > 0 ? `${minutes}분 ${seconds}초` : `${seconds}초`;
+                
+                return `
+                    <div class="scheduled-item">
+                        <div class="scheduled-info">
+                            💊 ${notification.medication.name} 
+                            <span class="countdown">${remaining > 0 ? timeStr + ' 후' : '알림 완료'}</span>
+                        </div>
+                        ${remaining > 0 ? `<button class="cancel-btn" onclick="removeScheduledNotification(${notification.id})">취소</button>` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // 특정 약물에 대한 알림 설정
+        function scheduleSpecificMedication(id, name, dosage, time) {
+            const [hours, minutes] = time.split(':').map(Number);
+            const now = new Date();
+            const scheduledTime = new Date();
+            
+            scheduledTime.setHours(hours, minutes, 0, 0);
+            
+            // 이미 지난 시간이면 다음 날로 설정
+            if (scheduledTime <= now) {
+                scheduledTime.setDate(scheduledTime.getDate() + 1);
+            }
+            
+            const timeDiff = scheduledTime - now;
+            const minutesUntil = Math.floor(timeDiff / 1000 / 60);
+            
+            // 데모를 위해 1분 이내로 설정
+            const demoDelay = Math.min(60, Math.max(10, minutesUntil * 60)); // 최소 10초, 최대 60초
+            
+            const notificationId = notificationIdCounter++;
+            const demoScheduledTime = new Date();
+            demoScheduledTime.setSeconds(demoScheduledTime.getSeconds() + demoDelay);
+            
+            const notification = {
+                id: notificationId,
+                scheduledTime: demoScheduledTime,
+                delay: demoDelay,
+                medication: { id, name, dosage, time }
+            };
+            
+            scheduledNotifications.push(notification);
+            
+            // 타이머 설정
+            notification.timeoutId = setTimeout(() => {
+                showScheduledNotification(notification);
+                removeScheduledNotification(notification.id);
+            }, demoDelay * 1000);
+            
+            // 카운트다운 시작
+            startCountdown(notification);
+            
+            // UI 업데이트
+            updateScheduledList();
+            
+            // 성공 피드백
+            alert(`✅ ${name} 알림이 설정되었습니다!\n원래 시간: ${time}\n데모를 위해 ${demoDelay}초 후에 알림이 울립니다.`);
+            console.log(`⏰ ${name} 알림 예약됨: ${time} (데모: ${demoDelay}초 후)`);
+        }
+
+        // 약물에 실제 시간 기반 알림 설정
+        function scheduleMedicationNotifications() {
+            medications.forEach(med => {
+                if (med.time) {
+                    const [hours, minutes] = med.time.split(':').map(Number);
+                    const now = new Date();
+                    const scheduledTime = new Date();
+                    
+                    scheduledTime.setHours(hours, minutes, 0, 0);
+                    
+                    // 이미 지난 시간이면 다음 날로 설정
+                    if (scheduledTime <= now) {
+                        scheduledTime.setDate(scheduledTime.getDate() + 1);
+                    }
+                    
+                    const timeDiff = scheduledTime - now;
+                    
+                    console.log(`⏰ ${med.name} 알림 예약: ${med.time} (${Math.floor(timeDiff / 1000 / 60)}분 후)`);
+                    
+                    // 실제 알림 예약 (나중에 구현)
+                    // setTimeout(() => { ... }, timeDiff);
+                }
+            });
+        }
+
         // 페이지 로드 시 약물 목록 불러오기
         window.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
                 if (window.medicationStorage) {
                     loadMedications();
-                    console.log('💊 Phase 2: 약물 관리 기능이 준비되었습니다!');
+                    console.log('💊 Phase 3: 스마트 알림 시스템이 준비되었습니다!');
+                    
+                    // 실제 시간 기반 알림 스케줄링 (데모용으로 주석처리)
+                    // scheduleMedicationNotifications();
                 }
             }, 500);
         });
