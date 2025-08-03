@@ -89,13 +89,20 @@
             transform: translateY(0);
         }
 
-        /* 약물 관리 스타일 */
+        /* 약물 관리 스타일 - Magic MCP 디자인 적용 */
         .medication-form, .medication-list {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
             padding: 25px;
             margin: 20px 0;
             text-align: left;
+            box-shadow: 
+                0 12px 40px 0 rgba(31, 38, 135, 0.4),
+                0 0 0 1px rgba(255, 255, 255, 0.25),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .medication-form h3, .medication-list h3 {
@@ -150,46 +157,216 @@
             box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
         }
 
+        /* Magic MCP 스타일 통합 - 약물 카드 */
         .medication-item {
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+            height: 160px;
+            border-radius: 24px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            margin: 15px 0;
+            
+            /* 글래스모피즘 배경 */
             background: rgba(255, 255, 255, 0.15);
-            border-radius: 10px;
-            padding: 15px;
-            margin: 10px 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            
+            /* 그라데이션 배경 애니메이션 */
+            background-image: 
+                linear-gradient(135deg, #667eea 0%, #764ba2 100%),
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3), transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.15), transparent 50%);
+            background-size: 100% 100%, 50% 50%, 30% 30%;
+            background-position: 0% 0%, 0% 100%, 100% 0%;
+            
+            /* 플로팅 애니메이션 */
+            animation: cardFloat 6s ease-in-out infinite;
+            
+            /* 그림자 */
+            box-shadow: 
+                0 12px 40px 0 rgba(31, 38, 135, 0.4),
+                0 0 0 1px rgba(255, 255, 255, 0.25),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        @keyframes cardFloat {
+            0%, 100% { 
+                transform: translateY(0px) rotate(0deg); 
+            }
+            50% { 
+                transform: translateY(-8px) rotate(0.5deg); 
+            }
+        }
+
+        .medication-item:hover {
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: 
+                0 20px 60px 0 rgba(31, 38, 135, 0.6),
+                0 0 0 2px rgba(255, 255, 255, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
+            
+            background-position: 100% 100%, 100% 0%, 0% 100%;
+            animation: cardFloat 3s ease-in-out infinite;
+        }
+
+        .medication-item.pressed {
+            transform: translateY(-8px) scale(0.98);
+            transition: all 0.1s ease-out;
+        }
+
+        /* 글래스 오버레이 */
+        .medication-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: linear-gradient(180deg, 
+                rgba(255, 255, 255, 0.2) 0%,
+                rgba(255, 255, 255, 0.05) 100%
+            );
+            border-radius: 24px 24px 0 0;
+            pointer-events: none;
+            z-index: 1;
         }
 
         .medication-info {
-            flex: 1;
+            position: relative;
+            height: 100%;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            z-index: 2;
+        }
+
+        .medication-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 12px;
         }
 
         .medication-name {
-            font-weight: bold;
-            font-size: 1.1rem;
-            margin-bottom: 5px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: #ffffff;
+            margin: 0;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            letter-spacing: -0.02em;
+        }
+
+        .dosage-badge {
+            padding: 4px 8px;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif;
+            font-size: 11px;
+            font-weight: 600;
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         .medication-details {
-            font-size: 0.9rem;
-            opacity: 0.8;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            opacity: 0.9;
+            font-size: 13px;
+            color: #ffffff;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .time-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 6px;
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 10px;
+        }
+
+        /* 액션 버튼들 */
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-top: 12px;
+        }
+
+        /* 네오모피즘 버튼 */
+        .neomorphic-btn {
+            position: relative;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 11px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+            
+            /* 네오모피즘 그림자 */
+            box-shadow: 
+                6px 6px 12px rgba(0, 0, 0, 0.15),
+                -6px -6px 12px rgba(255, 255, 255, 0.2),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+        }
+
+        .schedule-med-btn {
+            flex: 1;
+            height: 32px;
+            background: linear-gradient(145deg, 
+                rgba(255, 255, 255, 0.25) 0%,
+                rgba(255, 255, 255, 0.1) 100%
+            );
+            color: #ffffff;
+            padding: 6px 12px;
         }
 
         .delete-btn {
-            background: linear-gradient(145deg, #ef4444, #dc2626);
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(145deg, 
+                rgba(245, 87, 108, 0.8) 0%,
+                rgba(240, 147, 251, 0.6) 100%
+            );
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .delete-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+        /* 버튼 호버 효과 */
+        .neomorphic-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                8px 8px 16px rgba(0, 0, 0, 0.2),
+                -8px -8px 16px rgba(255, 255, 255, 0.3),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+        }
+
+        .neomorphic-btn:active {
+            transform: translateY(0px);
+            box-shadow: 
+                3px 3px 6px rgba(0, 0, 0, 0.2),
+                -3px -3px 6px rgba(255, 255, 255, 0.1),
+                inset 2px 2px 4px rgba(0, 0, 0, 0.1),
+                inset -2px -2px 4px rgba(255, 255, 255, 0.1);
         }
 
         .empty-state {
@@ -325,6 +502,312 @@
             transform: translateY(-1px);
             box-shadow: 0 4px 10px rgba(16, 185, 129, 0.4);
         }
+
+        /* 탭 네비게이션 스타일 */
+        .tab-navigation {
+            display: flex;
+            gap: 5px;
+            margin: 20px 0;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 5px;
+            backdrop-filter: blur(10px);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 12px;
+            background: transparent;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .tab-btn.active {
+            background: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(15px);
+        }
+
+        .tab-btn:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* 탭 콘텐츠 스타일 */
+        .tab-content {
+            position: relative;
+        }
+
+        .tab-panel {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 업무 스케줄링 영역 스타일 */
+        .main-scheduling-area {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 25px;
+            margin: 20px 0;
+            box-shadow: 
+                0 12px 40px 0 rgba(31, 38, 135, 0.4),
+                0 0 0 1px rgba(255, 255, 255, 0.25),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .disease-selection, .work-schedule-setup, .active-schedule {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .disease-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .disease-btn {
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 15px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .disease-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 255, 255, 0.2);
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.2));
+        }
+
+        .disease-btn.selected {
+            background: linear-gradient(145deg, #4facfe, #00f2fe);
+            box-shadow: 0 8px 25px rgba(79, 172, 254, 0.4);
+        }
+
+        .selected-info {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+            text-align: center;
+            opacity: 0.9;
+        }
+
+        .time-inputs {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .time-inputs label {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            font-weight: 500;
+        }
+
+        /* 질병 검색 스타일 */
+        .disease-search {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+
+        .disease-search input {
+            flex: 1;
+        }
+
+        .popular-diseases, .custom-diseases {
+            margin: 15px 0;
+        }
+
+        .popular-diseases h5, .custom-diseases h5 {
+            margin: 0 0 10px 0;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+
+        /* 실시간 타이머 스타일 */
+        .live-timer {
+            background: linear-gradient(145deg, rgba(0, 255, 127, 0.1), rgba(0, 191, 255, 0.1));
+            border: 2px solid rgba(0, 255, 127, 0.3);
+            border-radius: 20px;
+            padding: 25px;
+            margin-top: 20px;
+            backdrop-filter: blur(15px);
+            animation: pulse 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 20px rgba(0, 255, 127, 0.3); }
+            100% { box-shadow: 0 0 30px rgba(0, 255, 127, 0.5); }
+        }
+
+        .timer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .timer-header h4 {
+            margin: 0;
+            color: #00ff7f;
+            font-size: 1.2rem;
+        }
+
+        .pause-btn, .stop-btn {
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            margin-left: 10px;
+        }
+
+        .pause-btn:hover, .stop-btn:hover {
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.2));
+            transform: translateY(-2px);
+        }
+
+        .timer-display {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .current-phase {
+            text-align: center;
+        }
+
+        .current-phase span {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #00ff7f;
+            display: block;
+            margin-bottom: 15px;
+        }
+
+        .phase-progress {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            height: 15px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #00ff7f, #00bfff);
+            border-radius: 15px;
+            width: 0%;
+            transition: width 1s ease;
+            box-shadow: 0 0 10px rgba(0, 255, 127, 0.5);
+        }
+
+        .timer-info {
+            display: flex;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 15px;
+        }
+
+        .time-remaining, .next-phase {
+            text-align: center;
+        }
+
+        .time-remaining span:first-child, .next-phase span:first-child {
+            display: block;
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-bottom: 5px;
+        }
+
+        .time-remaining span:last-child {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #00ff7f;
+        }
+
+        .next-phase span:last-child {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #00bfff;
+        }
+
+        .daily-progress {
+            margin-top: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 15px;
+        }
+
+        .daily-progress h5 {
+            margin: 0 0 15px 0;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .progress-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        .stat-item span:first-child {
+            opacity: 0.8;
+        }
+
+        .stat-item span:last-child {
+            font-weight: bold;
+            color: #00ff7f;
+        }
     </style>
 </head>
 <body>
@@ -334,13 +817,148 @@
         <p class="subtitle">질병별 맞춤 업무 스케줄링 앱</p>
         
         <div class="status">
-            <div class="success">✅ Phase 3 진행 중!</div>
-            <p>약물 알림을 설정해보세요!</p>
+            <div class="success">✅ Phase 4.5 진행 중!</div>
+            <p>질병별 맞춤 업무 스케줄링을 설정해보세요!</p>
         </div>
 
-        <!-- 약물 추가 폼 -->
-        <div class="medication-form">
-            <h3>💊 새 약물 추가</h3>
+        <!-- 탭 네비게이션 -->
+        <div class="tab-navigation">
+            <button class="tab-btn active" data-tab="scheduling">
+                🏥 업무 스케줄링
+            </button>
+            <button class="tab-btn" data-tab="medication">
+                💊 약물 관리
+            </button>
+        </div>
+
+        <!-- 탭 콘텐츠 -->
+        <div class="tab-content">
+            <!-- 업무 스케줄링 탭 -->
+            <div id="scheduling-tab" class="tab-panel active">
+                <div class="main-scheduling-area">
+                    <h3>🏥 질병별 맞춤 업무 스케줄링</h3>
+                    
+                    <!-- 질병 선택 -->
+                    <div class="disease-selection">
+                        <h4>📋 질병 선택</h4>
+                        
+                        <!-- 질병 검색 입력창 -->
+                        <div class="disease-search">
+                            <input type="text" id="disease-search-input" placeholder="질병명을 검색하세요 (예: 편두통, 당뇨병, 고혈압...)" class="form-input">
+                            <button id="add-disease-btn" class="add-btn">➕ 추가</button>
+                        </div>
+                        
+                        <!-- 자주 사용하는 질병 -->
+                        <div class="popular-diseases">
+                            <h5>자주 사용하는 질병</h5>
+                            <div class="disease-options">
+                                <button class="disease-btn" data-disease="migraine">
+                                    🧠 편두통
+                                </button>
+                                <button class="disease-btn" data-disease="disc">
+                                    🦴 디스크/목디스크
+                                </button>
+                                <button class="disease-btn" data-disease="diabetes">
+                                    🩸 당뇨병
+                                </button>
+                                <button class="disease-btn" data-disease="arthritis">
+                                    🦴 관절염
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- 추가된 질병 목록 -->
+                        <div class="custom-diseases">
+                            <h5>내가 추가한 질병</h5>
+                            <div id="custom-disease-list" class="disease-options">
+                                <!-- 사용자가 추가한 질병들이 여기 표시됩니다 -->
+                            </div>
+                        </div>
+                        
+                        <div id="selected-disease-info" class="selected-info">
+                            질병을 선택하면 맞춤 스케줄이 표시됩니다.
+                        </div>
+                    </div>
+
+                    <!-- 업무 시간 설정 -->
+                    <div class="work-schedule-setup">
+                        <h4>⏰ 업무 시간 설정</h4>
+                        <div class="time-inputs">
+                            <label>
+                                시작 시간:
+                                <input type="time" id="work-start-time" value="09:00" class="form-input">
+                            </label>
+                            <label>
+                                종료 시간:
+                                <input type="time" id="work-end-time" value="18:00" class="form-input">
+                            </label>
+                            <button id="apply-schedule-btn" class="add-btn">📅 스케줄 적용</button>
+                        </div>
+                    </div>
+
+                    <!-- 활성 스케줄 표시 -->
+                    <div id="active-schedule" class="active-schedule">
+                        <h4>📊 현재 활성 스케줄</h4>
+                        <div id="schedule-display" class="empty-state">
+                            질병과 업무시간을 선택하여 맞춤 스케줄을 생성하세요.
+                        </div>
+                        
+                        <!-- 실시간 타이머 표시 -->
+                        <div id="live-timer" class="live-timer" style="display: none;">
+                            <div class="timer-header">
+                                <h4>⏱️ 현재 진행 중</h4>
+                                <button id="pause-timer-btn" class="pause-btn">⏸️ 일시정지</button>
+                                <button id="stop-schedule-btn" class="stop-btn">⏹️ 중지</button>
+                            </div>
+                            
+                            <div class="timer-display">
+                                <div class="current-phase">
+                                    <span id="current-phase-name">업무 시간</span>
+                                    <div id="phase-progress" class="phase-progress">
+                                        <div id="progress-bar" class="progress-bar"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="timer-info">
+                                    <div class="time-remaining">
+                                        <span>남은 시간: </span>
+                                        <span id="time-remaining-display">25:00</span>
+                                    </div>
+                                    <div class="next-phase">
+                                        <span>다음: </span>
+                                        <span id="next-phase-display">5분 휴식</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 오늘의 진행 상황 -->
+                            <div class="daily-progress">
+                                <h5>📈 오늘의 진행 상황</h5>
+                                <div class="progress-stats">
+                                    <div class="stat-item">
+                                        <span>완료된 업무 블록:</span>
+                                        <span id="completed-blocks">0</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span>총 업무 시간:</span>
+                                        <span id="total-work-time">0분</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span>총 휴식 시간:</span>
+                                        <span id="total-rest-time">0분</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 약물 관리 탭 -->
+            <div id="medication-tab" class="tab-panel">
+                <!-- 약물 추가 폼 -->
+                <div class="medication-form">
+                    <h3>💊 새 약물 추가</h3>
             <div class="form-group">
                 <input type="text" id="medication-name" placeholder="약물 이름 (예: 아모잘탄)" class="form-input">
                 <input type="text" id="medication-dosage" placeholder="용량 (예: 5mg)" class="form-input">
@@ -360,30 +978,32 @@
             </div>
         </div>
 
-        <!-- 알림 테스트 영역 -->
-        <div class="notification-test">
-            <h3>⏰ 알림 테스트</h3>
-            <div class="test-controls">
-                <label>알림 예약 (초 단위):</label>
-                <select id="test-delay">
-                    <option value="5">5초 후</option>
-                    <option value="10">10초 후</option>
-                    <option value="30">30초 후</option>
-                    <option value="60">1분 후</option>
-                </select>
-                <button id="schedule-test-btn" class="schedule-btn">
-                    ⏰ 알림 예약
-                </button>
-            </div>
-            <div id="scheduled-notifications" class="scheduled-list">
-                <!-- 예약된 알림이 여기 표시됩니다 -->
-            </div>
-        </div>
+                <!-- 알림 테스트 영역 -->
+                <div class="notification-test">
+                    <h3>⏰ 알림 테스트</h3>
+                    <div class="test-controls">
+                        <label>알림 예약 (초 단위):</label>
+                        <select id="test-delay">
+                            <option value="5">5초 후</option>
+                            <option value="10">10초 후</option>
+                            <option value="30">30초 후</option>
+                            <option value="60">1분 후</option>
+                        </select>
+                        <button id="schedule-test-btn" class="schedule-btn">
+                            ⏰ 알림 예약
+                        </button>
+                    </div>
+                    <div id="scheduled-notifications" class="scheduled-list">
+                        <!-- 예약된 알림이 여기 표시됩니다 -->
+                    </div>
+                </div>
 
-        <div class="test-buttons">
-            <button id="notification-btn" class="test-btn">
-                💊 즉시 알림 테스트
-            </button>
+                <div class="test-buttons">
+                    <button id="notification-btn" class="test-btn">
+                        💊 즉시 알림 테스트
+                    </button>
+                </div>
+            </div>
         </div>
 
         <div class="version-info">
@@ -531,16 +1151,21 @@
             container.innerHTML = medications.map(med => `
                 <div class="medication-item">
                     <div class="medication-info">
-                        <div class="medication-name">💊 ${med.name}</div>
+                        <div class="medication-header">
+                            <div class="medication-name">💊 ${med.name}</div>
+                            ${med.dosage ? `<div class="dosage-badge">${med.dosage}</div>` : ''}
+                        </div>
+                        ${med.time ? `
                         <div class="medication-details">
-                            ${med.dosage ? `용량: ${med.dosage}` : ''} 
-                            ${med.time ? `복용시간: ${med.time}` : ''}
-                            ${med.time ? `<button class="schedule-med-btn" onclick="scheduleSpecificMedication(${med.id}, '${med.name}', '${med.dosage || ''}', '${med.time}')">⏰ 알림 설정</button>` : ''}
+                            <div class="time-icon">🕐</div>
+                            <span>복용시간: ${med.time}</span>
+                        </div>
+                        ` : ''}
+                        <div class="action-buttons">
+                            ${med.time ? `<button class="schedule-med-btn neomorphic-btn" onclick="scheduleSpecificMedication(${med.id}, '${med.name}', '${med.dosage || ''}', '${med.time}')">⏰ 알림설정</button>` : ''}
+                            <button class="delete-btn neomorphic-btn" onclick="deleteMedication(${med.id})">🗑️</button>
                         </div>
                     </div>
-                    <button class="delete-btn" onclick="deleteMedication(${med.id})">
-                        🗑️ 삭제
-                    </button>
                 </div>
             `).join('');
         }
@@ -769,17 +1394,480 @@
             });
         }
 
-        // 페이지 로드 시 약물 목록 불러오기
+        // 탭 전환 기능
+        function initTabs() {
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const tabPanels = document.querySelectorAll('.tab-panel');
+
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const targetTab = btn.getAttribute('data-tab');
+                    
+                    // 모든 탭 버튼과 패널에서 active 클래스 제거
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    tabPanels.forEach(p => p.classList.remove('active'));
+                    
+                    // 클릭된 탭 버튼과 해당 패널에 active 클래스 추가
+                    btn.classList.add('active');
+                    document.getElementById(targetTab + '-tab').classList.add('active');
+                    
+                    console.log(`📋 ${targetTab} 탭으로 전환되었습니다.`);
+                });
+            });
+        }
+
+        // 질병 데이터베이스 (확장 가능)
+        let customDiseases = JSON.parse(localStorage.getItem('customDiseases') || '[]');
+        
+        const diseaseDatabase = {
+            // 기본 질병들
+            migraine: {
+                name: '편두통',
+                icon: '🧠',
+                description: '편두통 환자를 위한 맞춤 스케줄입니다.',
+                workDuration: 120, // 분
+                restDuration: 15,
+                workPattern: '2시간 집중 업무 → 15분 휴식 (어두운 곳에서)',
+                recommendations: ['밝은 화면 피하기', '규칙적인 수분 섭취', '목과 어깨 스트레칭']
+            },
+            disc: {
+                name: '디스크/목디스크',
+                icon: '🦴',
+                description: '척추 건강을 위한 맞춤 스케줄입니다.',
+                workDuration: 60,
+                restDuration: 10,
+                workPattern: '1시간 업무 → 10분 자세 교정 및 스트레칭',
+                recommendations: ['올바른 앉은 자세 유지', '목과 허리 스트레칭', '정기적인 자세 체크']
+            },
+            diabetes: {
+                name: '당뇨병',
+                icon: '🩸',
+                description: '혈당 관리를 위한 맞춤 스케줄입니다.',
+                workDuration: 90,
+                restDuration: 15,
+                workPattern: '1.5시간 업무 → 15분 혈당 체크 및 가벼운 활동',
+                recommendations: ['정시 식사', '혈당 체크', '가벼운 운동']
+            },
+            arthritis: {
+                name: '관절염',
+                icon: '🦴',
+                description: '관절 건강을 위한 맞춤 스케줄입니다.',
+                workDuration: 90,
+                restDuration: 10,
+                workPattern: '1.5시간 업무 → 10분 관절 운동',
+                recommendations: ['관절 스트레칭', '온찜질', '무리한 동작 피하기']
+            },
+            // 추가 질병들을 여기에 계속 추가할 수 있음
+            hypertension: {
+                name: '고혈압',
+                icon: '💓',
+                description: '혈압 관리를 위한 맞춤 스케줄입니다.',
+                workDuration: 75,
+                restDuration: 10,
+                workPattern: '1시간 15분 업무 → 10분 심호흡 및 휴식',
+                recommendations: ['규칙적인 심호흡', '스트레스 관리', '염분 조절']
+            },
+            depression: {
+                name: '우울증',
+                icon: '🌙',
+                description: '정신 건강을 위한 맞춤 스케줄입니다.',
+                workDuration: 60,
+                restDuration: 20,
+                workPattern: '1시간 업무 → 20분 명상 또는 산책',
+                recommendations: ['규칙적인 운동', '충분한 수면', '사회적 활동']
+            },
+            anxiety: {
+                name: '불안장애',
+                icon: '😰',
+                description: '불안 관리를 위한 맞춤 스케줄입니다.',
+                workDuration: 45,
+                restDuration: 15,
+                workPattern: '45분 업무 → 15분 심호흡 및 이완',
+                recommendations: ['심호흡 연습', '점진적 근육 이완', '규칙적인 생활']
+            }
+        };
+
+        // 질병 검색 및 추가 기능
+        function initDiseaseSearch() {
+            const searchInput = document.getElementById('disease-search-input');
+            const addBtn = document.getElementById('add-disease-btn');
+            const customList = document.getElementById('custom-disease-list');
+
+            // 질병 추가 기능
+            addBtn.addEventListener('click', () => {
+                const diseaseName = searchInput.value.trim();
+                if (!diseaseName) {
+                    alert('질병명을 입력해주세요!');
+                    return;
+                }
+
+                // 이미 있는지 확인
+                const existingDisease = customDiseases.find(d => d.name.toLowerCase() === diseaseName.toLowerCase());
+                if (existingDisease) {
+                    alert('이미 추가된 질병입니다!');
+                    return;
+                }
+
+                // 기본 질병 데이터베이스에서 찾기
+                const predefinedDisease = Object.values(diseaseDatabase).find(d => 
+                    d.name.toLowerCase().includes(diseaseName.toLowerCase())
+                );
+
+                let newDisease;
+                if (predefinedDisease) {
+                    newDisease = { ...predefinedDisease, id: 'custom_' + Date.now() };
+                } else {
+                    // 사용자 정의 질병
+                    newDisease = {
+                        id: 'custom_' + Date.now(),
+                        name: diseaseName,
+                        icon: '🏥',
+                        description: `${diseaseName} 환자를 위한 맞춤 스케줄입니다.`,
+                        workDuration: 60, // 기본 1시간
+                        restDuration: 10, // 기본 10분
+                        workPattern: '1시간 업무 → 10분 휴식',
+                        recommendations: ['규칙적인 휴식', '적절한 운동', '충분한 수면']
+                    };
+                }
+
+                customDiseases.push(newDisease);
+                localStorage.setItem('customDiseases', JSON.stringify(customDiseases));
+                
+                renderCustomDiseases();
+                searchInput.value = '';
+                
+                alert(`✅ "${diseaseName}" 질병이 추가되었습니다!`);
+                console.log(`🏥 새 질병 추가: ${diseaseName}`);
+            });
+
+            // Enter 키로 추가
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    addBtn.click();
+                }
+            });
+        }
+
+        // 사용자 정의 질병 목록 렌더링
+        function renderCustomDiseases() {
+            const customList = document.getElementById('custom-disease-list');
+            
+            if (customDiseases.length === 0) {
+                customList.innerHTML = '<div class="empty-state">추가된 질병이 없습니다.</div>';
+                return;
+            }
+
+            customList.innerHTML = customDiseases.map(disease => `
+                <button class="disease-btn" data-disease="${disease.id}">
+                    ${disease.icon} ${disease.name}
+                </button>
+            `).join('');
+
+            // 새로 추가된 버튼들에 이벤트 리스너 추가
+            attachDiseaseClickEvents();
+        }
+
+        // 질병 선택 기능
+        function initDiseaseSelection() {
+            attachDiseaseClickEvents();
+        }
+
+        function attachDiseaseClickEvents() {
+            const diseaseBtns = document.querySelectorAll('.disease-btn');
+            const selectedInfo = document.getElementById('selected-disease-info');
+
+            diseaseBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const diseaseId = btn.getAttribute('data-disease');
+                    
+                    // 모든 버튼에서 selected 클래스 제거
+                    diseaseBtns.forEach(b => b.classList.remove('selected'));
+                    
+                    // 클릭된 버튼에 selected 클래스 추가
+                    btn.classList.add('selected');
+                    
+                    // 질병 정보 찾기
+                    let diseaseInfo;
+                    if (diseaseId.startsWith('custom_')) {
+                        diseaseInfo = customDiseases.find(d => d.id === diseaseId);
+                    } else {
+                        diseaseInfo = diseaseDatabase[diseaseId];
+                    }
+
+                    // 질병 정보 표시
+                    if (diseaseInfo) {
+                        selectedInfo.innerHTML = `
+                            <h5>🏥 ${diseaseInfo.name}</h5>
+                            <p>${diseaseInfo.description}</p>
+                            <p><strong>📅 권장 패턴:</strong> ${diseaseInfo.workPattern}</p>
+                            <p><strong>⏱️ 업무/휴식:</strong> ${diseaseInfo.workDuration}분 업무 → ${diseaseInfo.restDuration}분 휴식</p>
+                            <p><strong>💡 권장사항:</strong> ${diseaseInfo.recommendations.join(', ')}</p>
+                        `;
+                        
+                        // 선택된 질병 정보 저장
+                        window.selectedDiseaseInfo = diseaseInfo;
+                        console.log(`🏥 ${diseaseInfo.name} 질병이 선택되었습니다.`);
+                    }
+                });
+            });
+        }
+
+        // 스케줄 적용 기능
+        function initScheduleApply() {
+            const applyBtn = document.getElementById('apply-schedule-btn');
+            const scheduleDisplay = document.getElementById('schedule-display');
+            
+            applyBtn.addEventListener('click', () => {
+                const startTime = document.getElementById('work-start-time').value;
+                const endTime = document.getElementById('work-end-time').value;
+                const selectedDisease = document.querySelector('.disease-btn.selected');
+                
+                if (!selectedDisease) {
+                    alert('먼저 질병을 선택해주세요!');
+                    return;
+                }
+                
+                if (!startTime || !endTime) {
+                    alert('업무 시간을 설정해주세요!');
+                    return;
+                }
+                
+                const diseaseName = selectedDisease.textContent.trim();
+                
+                scheduleDisplay.innerHTML = `
+                    <div class="active-schedule-info">
+                        <h5>📊 활성 스케줄</h5>
+                        <p><strong>질병:</strong> ${diseaseName}</p>
+                        <p><strong>업무시간:</strong> ${startTime} ~ ${endTime}</p>
+                        <p><strong>상태:</strong> <span style="color: #4ade80;">✅ 활성화됨</span></p>
+                        <button class="add-btn" onclick="startWorkSchedule()">🚀 스케줄 시작</button>
+                    </div>
+                `;
+                
+                alert(`✅ ${diseaseName} 맞춤 스케줄이 적용되었습니다!\n업무시간: ${startTime} ~ ${endTime}`);
+                console.log(`📅 스케줄 적용: ${diseaseName}, ${startTime}-${endTime}`);
+            });
+        }
+
+        // 업무 스케줄 타이머 관련 변수
+        let scheduleTimer = null;
+        let currentPhase = 'work'; // 'work' 또는 'rest'
+        let timeRemaining = 0;
+        let isPaused = false;
+        let dailyStats = {
+            completedBlocks: 0,
+            totalWorkTime: 0,
+            totalRestTime: 0
+        };
+
+        // 업무 스케줄 시작
+        function startWorkSchedule() {
+            if (!window.selectedDiseaseInfo) {
+                alert('먼저 질병을 선택해주세요!');
+                return;
+            }
+
+            const diseaseInfo = window.selectedDiseaseInfo;
+            const liveTimer = document.getElementById('live-timer');
+            const scheduleDisplay = document.getElementById('schedule-display');
+
+            // 타이머 표시
+            liveTimer.style.display = 'block';
+            scheduleDisplay.style.display = 'none';
+
+            // 첫 번째 업무 시간으로 시작
+            currentPhase = 'work';
+            timeRemaining = diseaseInfo.workDuration * 60; // 분을 초로 변환
+            
+            updateTimerDisplay();
+            startTimer();
+
+            alert(`🚀 ${diseaseInfo.name} 맞춤 스케줄이 시작되었습니다!\n업무시간: ${diseaseInfo.workDuration}분 → 휴식시간: ${diseaseInfo.restDuration}분`);
+            console.log('🚀 업무 스케줄 시작됨');
+        }
+
+        // 타이머 시작
+        function startTimer() {
+            if (scheduleTimer) {
+                clearInterval(scheduleTimer);
+            }
+
+            scheduleTimer = setInterval(() => {
+                if (!isPaused && timeRemaining > 0) {
+                    timeRemaining--;
+                    updateTimerDisplay();
+                    updateProgressBar();
+                } else if (timeRemaining <= 0) {
+                    // 현재 단계 완료
+                    completeCurrentPhase();
+                }
+            }, 1000);
+        }
+
+        // 타이머 디스플레이 업데이트
+        function updateTimerDisplay() {
+            const diseaseInfo = window.selectedDiseaseInfo;
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
+            const timeStr = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+            document.getElementById('time-remaining-display').textContent = timeStr;
+            document.getElementById('current-phase-name').textContent = 
+                currentPhase === 'work' ? '💼 업무 시간' : '😌 휴식 시간';
+
+            // 다음 단계 표시
+            if (currentPhase === 'work') {
+                document.getElementById('next-phase-display').textContent = 
+                    `${diseaseInfo.restDuration}분 휴식`;
+            } else {
+                document.getElementById('next-phase-display').textContent = 
+                    `${diseaseInfo.workDuration}분 업무`;
+            }
+
+            // 통계 업데이트
+            document.getElementById('completed-blocks').textContent = dailyStats.completedBlocks;
+            document.getElementById('total-work-time').textContent = `${dailyStats.totalWorkTime}분`;
+            document.getElementById('total-rest-time').textContent = `${dailyStats.totalRestTime}분`;
+        }
+
+        // 진행률 바 업데이트
+        function updateProgressBar() {
+            const diseaseInfo = window.selectedDiseaseInfo;
+            const totalTime = currentPhase === 'work' ? 
+                diseaseInfo.workDuration * 60 : diseaseInfo.restDuration * 60;
+            const progress = ((totalTime - timeRemaining) / totalTime) * 100;
+            
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+        }
+
+        // 현재 단계 완료
+        function completeCurrentPhase() {
+            const diseaseInfo = window.selectedDiseaseInfo;
+
+            if (currentPhase === 'work') {
+                // 업무 시간 완료 → 휴식 시간으로 전환
+                dailyStats.completedBlocks++;
+                dailyStats.totalWorkTime += diseaseInfo.workDuration;
+                
+                showPhaseNotification('업무 시간이 완료되었습니다!', '😌 이제 휴식 시간입니다. 잠시 쉬어가세요.');
+                
+                currentPhase = 'rest';
+                timeRemaining = diseaseInfo.restDuration * 60;
+                
+            } else {
+                // 휴식 시간 완료 → 업무 시간으로 전환
+                dailyStats.totalRestTime += diseaseInfo.restDuration;
+                
+                showPhaseNotification('휴식 시간이 완료되었습니다!', '💼 이제 다시 업무를 시작하세요.');
+                
+                currentPhase = 'work';
+                timeRemaining = diseaseInfo.workDuration * 60;
+            }
+
+            updateTimerDisplay();
+            updateProgressBar();
+        }
+
+        // 단계 전환 알림
+        function showPhaseNotification(title, message) {
+            const notification = new Notification(`🏥 Wonik Health - ${title}`, {
+                body: message,
+                icon: './assets/health-icon.png',
+                requireInteraction: true
+            });
+
+            notification.onclick = () => {
+                console.log('✅ 단계 전환 알림을 확인했습니다.');
+                notification.close();
+            };
+
+            // 시각적 알림도 표시
+            alert(`${title}\n${message}`);
+        }
+
+        // 타이머 일시정지/재개
+        function initTimerControls() {
+            const pauseBtn = document.getElementById('pause-timer-btn');
+            const stopBtn = document.getElementById('stop-schedule-btn');
+
+            pauseBtn.addEventListener('click', () => {
+                isPaused = !isPaused;
+                if (isPaused) {
+                    pauseBtn.innerHTML = '▶️ 재개';
+                    pauseBtn.style.background = 'linear-gradient(145deg, #22c55e, #16a34a)';
+                } else {
+                    pauseBtn.innerHTML = '⏸️ 일시정지';
+                    pauseBtn.style.background = 'linear-gradient(145deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1))';
+                }
+                console.log(`⏱️ 타이머 ${isPaused ? '일시정지' : '재개'}`);
+            });
+
+            stopBtn.addEventListener('click', () => {
+                if (confirm('정말로 스케줄을 중지하시겠습니까?')) {
+                    stopSchedule();
+                }
+            });
+        }
+
+        // 스케줄 중지
+        function stopSchedule() {
+            if (scheduleTimer) {
+                clearInterval(scheduleTimer);
+                scheduleTimer = null;
+            }
+
+            const liveTimer = document.getElementById('live-timer');
+            const scheduleDisplay = document.getElementById('schedule-display');
+
+            liveTimer.style.display = 'none';
+            scheduleDisplay.style.display = 'block';
+
+            // 통계 리셋
+            dailyStats = {
+                completedBlocks: 0,
+                totalWorkTime: 0,
+                totalRestTime: 0
+            };
+
+            isPaused = false;
+            document.getElementById('pause-timer-btn').innerHTML = '⏸️ 일시정지';
+
+            alert('⏹️ 스케줄이 중지되었습니다.');
+            console.log('⏹️ 스케줄 중지됨');
+        }
+
+        // 페이지 로드 시 초기화
         window.addEventListener('DOMContentLoaded', () => {
+            // 탭 기능 초기화
+            initTabs();
+            
+            // 질병 검색 기능 초기화
+            initDiseaseSearch();
+            
+            // 질병 선택 기능 초기화
+            initDiseaseSelection();
+            
+            // 사용자 정의 질병 목록 렌더링
+            renderCustomDiseases();
+            
+            // 스케줄 적용 기능 초기화
+            initScheduleApply();
+            
+            // 타이머 컨트롤 초기화
+            initTimerControls();
+            
+            // 약물 관리 기능 초기화
             setTimeout(() => {
                 if (window.medicationStorage) {
                     loadMedications();
-                    console.log('💊 Phase 3: 스마트 알림 시스템이 준비되었습니다!');
+                    console.log('💊 약물 저장소가 준비되었습니다!');
                     
                     // 실제 시간 기반 알림 스케줄링 (데모용으로 주석처리)
                     // scheduleMedicationNotifications();
                 }
             }, 500);
+            
+            console.log('🏥 질병 검색 + 실시간 타이머 시스템이 준비되었습니다!');
         });
     </script>
 </body>
