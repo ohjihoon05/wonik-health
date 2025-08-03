@@ -6,242 +6,181 @@
     <title>Wonik Health</title>
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
             margin: 0;
-            padding: 40px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 0;
+            background: #fafafa;
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: white;
+            color: #1a1a1a;
+            line-height: 1.6;
         }
 
         .container {
-            text-align: center;
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            border-radius: 20px;
-            padding: 60px;
-            box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.4);
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 32px;
+            background: #ffffff;
+            min-height: 100vh;
         }
 
         h1 {
-            font-size: 3rem;
-            margin-bottom: 20px;
-            background: linear-gradient(45deg, #fff, #f0f0f0);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 0 0 8px 0;
+            color: #1a1a1a;
+            text-align: center;
         }
 
         .subtitle {
-            font-size: 1.2rem;
-            margin-bottom: 40px;
-            opacity: 0.9;
+            font-size: 1.1rem;
+            margin-bottom: 48px;
+            color: #6b7280;
+            text-align: center;
         }
 
         .status {
-            font-size: 1.1rem;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
             padding: 20px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            margin: 20px 0;
+            margin: 24px 0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
         .success {
-            color: #4ade80;
-            font-weight: bold;
+            color: #059669;
+            font-weight: 600;
         }
 
         .version-info {
-            margin-top: 40px;
-            font-size: 0.9rem;
-            opacity: 0.7;
+            margin-top: 48px;
+            font-size: 0.875rem;
+            color: #9ca3af;
+            text-align: center;
+            padding: 24px;
+            border-top: 1px solid #e5e7eb;
         }
 
         .emoji {
-            font-size: 4rem;
-            margin-bottom: 20px;
+            font-size: 3rem;
+            margin-bottom: 16px;
+            display: block;
+            text-align: center;
         }
 
         .test-btn {
-            background: linear-gradient(145deg, #4ade80, #22c55e);
+            background: #059669;
             color: white;
             border: none;
-            padding: 15px 30px;
-            font-size: 1.1rem;
-            border-radius: 12px;
+            padding: 12px 24px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            border-radius: 8px;
             cursor: pointer;
-            box-shadow: 0 8px 20px rgba(34, 197, 94, 0.3);
-            transition: all 0.3s ease;
+            transition: all 0.15s ease;
             font-family: inherit;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
         }
 
         .test-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 30px rgba(34, 197, 94, 0.4);
+            background: #047857;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
         .test-btn:active {
-            transform: translateY(0);
+            background: #065f46;
+            transform: translateY(1px);
         }
 
-        /* 약물 관리 스타일 - Magic MCP 디자인 적용 */
+        /* 미니멀 카드 시스템 */
         .medication-form, .medication-list {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-radius: 24px;
-            padding: 25px;
-            margin: 20px 0;
-            text-align: left;
-            box-shadow: 
-                0 12px 40px 0 rgba(31, 38, 135, 0.4),
-                0 0 0 1px rgba(255, 255, 255, 0.25),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 24px;
+            margin: 16px 0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.15s ease;
         }
 
         .medication-form h3, .medication-list h3 {
-            margin-top: 0;
-            margin-bottom: 20px;
-            color: #fff;
-            text-align: center;
+            margin: 0 0 20px 0;
+            color: #1a1a1a;
+            font-size: 1.25rem;
+            font-weight: 600;
+            text-align: left;
         }
 
         .form-group {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             flex-wrap: wrap;
-            justify-content: center;
+            align-items: end;
         }
 
         .form-input {
-            padding: 12px 15px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            font-size: 1rem;
-            backdrop-filter: blur(10px);
+            padding: 10px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            background: #ffffff;
+            color: #1a1a1a;
+            font-size: 0.875rem;
             flex: 1;
             min-width: 150px;
+            transition: border-color 0.15s ease;
         }
 
         .form-input::placeholder {
-            color: rgba(255, 255, 255, 0.7);
+            color: #9ca3af;
         }
 
         .form-input:focus {
             outline: none;
-            border-color: rgba(255, 255, 255, 0.6);
-            background: rgba(255, 255, 255, 0.15);
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
 
         .add-btn {
-            background: linear-gradient(145deg, #3b82f6, #2563eb);
+            background: #2563eb;
             color: white;
             border: none;
-            padding: 12px 25px;
-            border-radius: 8px;
+            padding: 10px 20px;
+            border-radius: 6px;
             cursor: pointer;
-            font-size: 1rem;
-            transition: all 0.3s ease;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.15s ease;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
         }
 
         .add-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+            background: #1d4ed8;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
         /* Magic MCP 스타일 통합 - 약물 카드 */
         .medication-item {
-            position: relative;
-            width: 100%;
-            max-width: 100%;
-            height: 160px;
-            border-radius: 24px;
-            overflow: hidden;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            margin: 15px 0;
-            
-            /* 글래스모피즘 배경 */
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            
-            /* 그라데이션 배경 애니메이션 */
-            background-image: 
-                linear-gradient(135deg, #667eea 0%, #764ba2 100%),
-                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3), transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.15), transparent 50%);
-            background-size: 100% 100%, 50% 50%, 30% 30%;
-            background-position: 0% 0%, 0% 100%, 100% 0%;
-            
-            /* 플로팅 애니메이션 */
-            animation: cardFloat 6s ease-in-out infinite;
-            
-            /* 그림자 */
-            box-shadow: 
-                0 12px 40px 0 rgba(31, 38, 135, 0.4),
-                0 0 0 1px rgba(255, 255, 255, 0.25),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 12px 0;
+            transition: all 0.15s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
-        @keyframes cardFloat {
-            0%, 100% { 
-                transform: translateY(0px) rotate(0deg); 
-            }
-            50% { 
-                transform: translateY(-8px) rotate(0.5deg); 
-            }
-        }
 
         .medication-item:hover {
-            transform: translateY(-12px) scale(1.02);
-            box-shadow: 
-                0 20px 60px 0 rgba(31, 38, 135, 0.6),
-                0 0 0 2px rgba(255, 255, 255, 0.3),
-                inset 0 1px 0 rgba(255, 255, 255, 0.4);
-            
-            background-position: 100% 100%, 100% 0%, 0% 100%;
-            animation: cardFloat 3s ease-in-out infinite;
+            border-color: #d1d5db;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
-        .medication-item.pressed {
-            transform: translateY(-8px) scale(0.98);
-            transition: all 0.1s ease-out;
-        }
 
-        /* 글래스 오버레이 */
-        .medication-item::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 50%;
-            background: linear-gradient(180deg, 
-                rgba(255, 255, 255, 0.2) 0%,
-                rgba(255, 255, 255, 0.05) 100%
-            );
-            border-radius: 24px 24px 0 0;
-            pointer-events: none;
-            z-index: 1;
-        }
 
         .medication-info {
-            position: relative;
-            height: 100%;
-            padding: 20px;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
-            z-index: 2;
+            gap: 12px;
         }
 
         .medication-header {
@@ -253,37 +192,28 @@
         }
 
         .medication-name {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            font-size: 18px;
-            font-weight: 700;
-            color: #ffffff;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1a1a1a;
             margin: 0;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            letter-spacing: -0.02em;
         }
 
         .dosage-badge {
             padding: 4px 8px;
-            background: rgba(255, 255, 255, 0.25);
-            backdrop-filter: blur(10px);
-            border-radius: 12px;
-            font-family: 'Inter', sans-serif;
-            font-size: 11px;
-            font-weight: 600;
-            color: #ffffff;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #1d4ed8;
         }
 
         .medication-details {
             display: flex;
             align-items: center;
             gap: 8px;
-            opacity: 0.9;
-            font-size: 13px;
-            color: #ffffff;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            font-size: 0.875rem;
+            color: #6b7280;
         }
 
         .time-icon {
@@ -292,12 +222,9 @@
             justify-content: center;
             width: 20px;
             height: 20px;
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            border-radius: 6px;
-            color: #ffffff;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            font-size: 10px;
+            background: #f3f4f6;
+            border-radius: 4px;
+            font-size: 0.75rem;
         }
 
         /* 액션 버튼들 */
@@ -308,87 +235,318 @@
             margin-top: 12px;
         }
 
-        /* 네오모피즘 버튼 */
+        /* 미니멀 버튼 */
         .neomorphic-btn {
-            position: relative;
-            border: none;
-            border-radius: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
             cursor: pointer;
-            font-family: 'Inter', sans-serif;
-            font-weight: 600;
-            font-size: 11px;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            overflow: hidden;
-            
-            /* 네오모피즘 그림자 */
-            box-shadow: 
-                6px 6px 12px rgba(0, 0, 0, 0.15),
-                -6px -6px 12px rgba(255, 255, 255, 0.2),
-                inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+            font-weight: 500;
+            font-size: 0.75rem;
+            transition: all 0.15s ease;
+            background: #ffffff;
+            color: #374151;
         }
 
         .schedule-med-btn {
             flex: 1;
             height: 32px;
-            background: linear-gradient(145deg, 
-                rgba(255, 255, 255, 0.25) 0%,
-                rgba(255, 255, 255, 0.1) 100%
-            );
+            background: #2563eb;
             color: #ffffff;
             padding: 6px 12px;
+            border: none;
         }
 
         .delete-btn {
             width: 32px;
             height: 32px;
-            background: linear-gradient(145deg, 
-                rgba(245, 87, 108, 0.8) 0%,
-                rgba(240, 147, 251, 0.6) 100%
-            );
+            background: #ef4444;
             color: #ffffff;
             display: flex;
             align-items: center;
             justify-content: center;
+            border: none;
         }
 
         /* 버튼 호버 효과 */
         .neomorphic-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 
-                8px 8px 16px rgba(0, 0, 0, 0.2),
-                -8px -8px 16px rgba(255, 255, 255, 0.3),
-                inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+            border-color: #9ca3af;
         }
 
-        .neomorphic-btn:active {
-            transform: translateY(0px);
-            box-shadow: 
-                3px 3px 6px rgba(0, 0, 0, 0.2),
-                -3px -3px 6px rgba(255, 255, 255, 0.1),
-                inset 2px 2px 4px rgba(0, 0, 0, 0.1),
-                inset -2px -2px 4px rgba(255, 255, 255, 0.1);
+        .schedule-med-btn:hover {
+            background: #1d4ed8;
+        }
+        
+        .delete-btn:hover {
+            background: #dc2626;
+        }
+
+        /* 패턴 분석 스타일 */
+        .analytics-area {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 24px;
+            margin: 16px 0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .today-summary, .weekly-pattern, .insights-section, .recommendations, .data-management {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 16px 0;
+        }
+
+        .today-summary h4, .weekly-pattern h4, .insights-section h4, .recommendations h4, .data-management h4 {
+            margin: 0 0 16px 0;
+            color: #374151;
+            font-weight: 600;
+            font-size: 1.125rem;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .summary-card {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.15s ease;
+        }
+
+        .summary-card:hover {
+            border-color: #d1d5db;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .summary-icon {
+            font-size: 1.5rem;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f3f4f6;
+            border-radius: 8px;
+        }
+
+        .summary-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .summary-label {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        .summary-value {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .chart-header span {
+            font-weight: 500;
+            color: #374151;
+        }
+
+        #week-selector {
+            padding: 6px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            background: #ffffff;
+            color: #1a1a1a;
+            font-size: 0.875rem;
+        }
+
+        .weekly-bars {
+            display: flex;
+            justify-content: space-between;
+            align-items: end;
+            height: 200px;
+            gap: 8px;
+            padding: 20px 0;
+            border-top: 1px solid #e5e7eb;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .day-bar {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .bar-container {
+            width: 100%;
+            height: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: end;
+            position: relative;
+        }
+
+        .work-bar {
+            background: #2563eb;
+            border-radius: 4px 4px 0 0;
+            min-height: 4px;
+        }
+
+        .rest-bar {
+            background: #10b981;
+            border-radius: 0 0 4px 4px;
+            min-height: 4px;
+        }
+
+        .day-label {
+            font-size: 0.75rem;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 16px;
+        }
+
+        .insight-card {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .insight-card.positive {
+            border-left: 4px solid #10b981;
+        }
+
+        .insight-card.warning {
+            border-left: 4px solid #f59e0b;
+        }
+
+        .insight-card.negative {
+            border-left: 4px solid #ef4444;
+        }
+
+        .insight-title {
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+        }
+
+        .insight-description {
+            font-size: 0.875rem;
+            color: #6b7280;
+            line-height: 1.5;
+        }
+
+        .recommendation-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .recommendation-item {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 16px;
+            display: flex;
+            align-items: start;
+            gap: 12px;
+        }
+
+        .recommendation-icon {
+            font-size: 1.25rem;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #eff6ff;
+            border-radius: 6px;
+            flex-shrink: 0;
+        }
+
+        .recommendation-content {
+            flex: 1;
+        }
+
+        .recommendation-title {
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 4px;
+        }
+
+        .recommendation-text {
+            font-size: 0.875rem;
+            color: #6b7280;
+            line-height: 1.5;
+        }
+
+        .data-actions {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .data-info {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        .data-info p {
+            margin: 4px 0;
+        }
+
+        .data-info span {
+            font-weight: 500;
+            color: #374151;
         }
 
         .empty-state {
             text-align: center;
-            opacity: 0.7;
-            padding: 30px;
+            color: #9ca3af;
+            padding: 24px;
             font-style: italic;
+            font-size: 0.875rem;
         }
 
         /* 알림 테스트 스타일 */
         .notification-test {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 25px;
-            margin: 20px 0;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 24px;
+            margin: 16px 0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
         .notification-test h3 {
-            margin-top: 0;
-            margin-bottom: 20px;
-            color: #fff;
-            text-align: center;
+            margin: 0 0 20px 0;
+            color: #1a1a1a;
+            font-size: 1.25rem;
+            font-weight: 600;
+            text-align: left;
         }
 
         .test-controls {
@@ -400,39 +558,41 @@
         }
 
         .test-controls label {
-            font-size: 1rem;
-            opacity: 0.9;
+            font-size: 0.875rem;
+            color: #374151;
+            font-weight: 500;
         }
 
         #test-delay {
-            padding: 10px 15px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            font-size: 1rem;
-            backdrop-filter: blur(10px);
+            padding: 10px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            background: #ffffff;
+            color: #1a1a1a;
+            font-size: 0.875rem;
         }
 
         #test-delay option {
-            background: #333;
-            color: white;
+            background: #ffffff;
+            color: #1a1a1a;
         }
 
         .schedule-btn {
-            background: linear-gradient(145deg, #f59e0b, #d97706);
+            background: #f59e0b;
             color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
+            padding: 10px 16px;
+            border-radius: 6px;
             cursor: pointer;
-            font-size: 1rem;
-            transition: all 0.3s ease;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.15s ease;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
         }
 
         .schedule-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(245, 158, 11, 0.4);
+            background: #d97706;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
         .scheduled-list {
@@ -441,14 +601,14 @@
         }
 
         .scheduled-item {
-            background: rgba(255, 255, 255, 0.1);
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
             border-radius: 8px;
             padding: 12px;
             margin: 8px 0;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            animation: slideIn 0.3s ease;
         }
 
         @keyframes slideIn {
@@ -467,23 +627,25 @@
         }
 
         .countdown {
-            font-weight: bold;
+            font-weight: 600;
             color: #f59e0b;
             margin-left: 10px;
         }
 
         .cancel-btn {
-            background: rgba(239, 68, 68, 0.8);
+            background: #ef4444;
             color: white;
             border: none;
             padding: 6px 12px;
             border-radius: 4px;
             cursor: pointer;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            transition: all 0.15s ease;
         }
 
         .cancel-btn:hover {
-            background: rgba(239, 68, 68, 1);
+            background: #dc2626;
         }
 
         .schedule-med-btn {
@@ -506,38 +668,37 @@
         /* 탭 네비게이션 스타일 */
         .tab-navigation {
             display: flex;
-            gap: 5px;
-            margin: 20px 0;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 5px;
-            backdrop-filter: blur(10px);
+            gap: 2px;
+            margin: 24px 0;
+            background: #f3f4f6;
+            border-radius: 8px;
+            padding: 4px;
         }
 
         .tab-btn {
             flex: 1;
-            padding: 15px 20px;
+            padding: 10px 16px;
             border: none;
-            border-radius: 12px;
+            border-radius: 6px;
             background: transparent;
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 1rem;
-            font-weight: 600;
+            color: #6b7280;
+            font-size: 0.875rem;
+            font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.15s ease;
             font-family: inherit;
         }
 
         .tab-btn.active {
-            background: rgba(255, 255, 255, 0.2);
-            color: #ffffff;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            backdrop-filter: blur(15px);
+            background: #ffffff;
+            color: #1a1a1a;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            font-weight: 600;
         }
 
         .tab-btn:hover:not(.active) {
-            background: rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.5);
+            color: #374151;
         }
 
         /* 탭 콘텐츠 스타일 */
@@ -567,22 +728,20 @@
 
         /* 업무 스케줄링 영역 스타일 */
         .main-scheduling-area {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(20px);
-            border-radius: 24px;
-            padding: 25px;
-            margin: 20px 0;
-            box-shadow: 
-                0 12px 40px 0 rgba(31, 38, 135, 0.4),
-                0 0 0 1px rgba(255, 255, 255, 0.25),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 24px;
+            margin: 16px 0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
         .disease-selection, .work-schedule-setup, .active-schedule {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
             padding: 20px;
-            margin: 15px 0;
+            margin: 16px 0;
         }
 
         .disease-options {
@@ -593,36 +752,36 @@
         }
 
         .disease-btn {
-            background: linear-gradient(145deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            padding: 15px 20px;
-            border-radius: 12px;
+            background: #ffffff;
+            color: #374151;
+            border: 1px solid #d1d5db;
+            padding: 12px 16px;
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 1rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.15s ease;
         }
 
         .disease-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(255, 255, 255, 0.2);
-            background: linear-gradient(145deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.2));
+            border-color: #9ca3af;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
         .disease-btn.selected {
-            background: linear-gradient(145deg, #4facfe, #00f2fe);
-            box-shadow: 0 8px 25px rgba(79, 172, 254, 0.4);
+            background: #eff6ff;
+            border-color: #2563eb;
+            color: #1d4ed8;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
         .selected-info {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            padding: 15px;
-            margin-top: 15px;
-            text-align: center;
-            opacity: 0.9;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 16px;
+            color: #374151;
         }
 
         .time-inputs {
@@ -636,8 +795,10 @@
         .time-inputs label {
             display: flex;
             flex-direction: column;
-            gap: 5px;
+            gap: 6px;
             font-weight: 500;
+            color: #374151;
+            font-size: 0.875rem;
         }
 
         /* 질병 검색 스타일 */
@@ -657,26 +818,22 @@
         }
 
         .popular-diseases h5, .custom-diseases h5 {
-            margin: 0 0 10px 0;
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 0.9rem;
+            margin: 0 0 12px 0;
+            color: #6b7280;
+            font-size: 0.875rem;
+            font-weight: 600;
         }
 
         /* 실시간 타이머 스타일 */
         .live-timer {
-            background: linear-gradient(145deg, rgba(0, 255, 127, 0.1), rgba(0, 191, 255, 0.1));
-            border: 2px solid rgba(0, 255, 127, 0.3);
-            border-radius: 20px;
-            padding: 25px;
-            margin-top: 20px;
-            backdrop-filter: blur(15px);
-            animation: pulse 2s ease-in-out infinite alternate;
+            background: #ffffff;
+            border: 1px solid #10b981;
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 16px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
-        @keyframes pulse {
-            0% { box-shadow: 0 0 20px rgba(0, 255, 127, 0.3); }
-            100% { box-shadow: 0 0 30px rgba(0, 255, 127, 0.5); }
-        }
 
         .timer-header {
             display: flex;
@@ -687,25 +844,27 @@
 
         .timer-header h4 {
             margin: 0;
-            color: #00ff7f;
-            font-size: 1.2rem;
+            color: #059669;
+            font-size: 1.125rem;
+            font-weight: 600;
         }
 
         .pause-btn, .stop-btn {
-            background: linear-gradient(145deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            padding: 8px 15px;
-            border-radius: 8px;
+            background: #f3f4f6;
+            color: #374151;
+            border: 1px solid #d1d5db;
+            padding: 8px 16px;
+            border-radius: 6px;
             cursor: pointer;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-            margin-left: 10px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.15s ease;
+            margin-left: 8px;
         }
 
         .pause-btn:hover, .stop-btn:hover {
-            background: linear-gradient(145deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.2));
-            transform: translateY(-2px);
+            background: #e5e7eb;
+            border-color: #9ca3af;
         }
 
         .timer-display {
@@ -719,36 +878,150 @@
         }
 
         .current-phase span {
-            font-size: 1.4rem;
-            font-weight: bold;
-            color: #00ff7f;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #059669;
             display: block;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
 
         .phase-progress {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            height: 15px;
+            background: #f3f4f6;
+            border-radius: 8px;
+            height: 8px;
             overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid #e5e7eb;
         }
 
         .progress-bar {
             height: 100%;
-            background: linear-gradient(90deg, #00ff7f, #00bfff);
-            border-radius: 15px;
+            background: #10b981;
+            border-radius: 8px;
             width: 0%;
             transition: width 1s ease;
-            box-shadow: 0 0 10px rgba(0, 255, 127, 0.5);
+        }
+
+        /* Analytics 차트 스타일 */
+        .empty-chart {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #9ca3af;
+            font-size: 0.875rem;
+        }
+
+        .empty-chart span {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        .day-label {
+            font-size: 0.75rem;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .time-label {
+            font-size: 0.75rem;
+            color: #374151;
+            font-weight: 600;
+        }
+
+        .work-bar {
+            width: 100%;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            border-radius: 4px 4px 0 0;
+            transition: all 0.3s ease;
+            min-height: 8px;
+        }
+
+        .work-bar.today {
+            background: linear-gradient(135deg, #059669, #10b981);
+            box-shadow: 0 0 8px rgba(5, 150, 105, 0.4);
+        }
+
+        .work-bar:hover {
+            transform: scaleY(1.05);
+            filter: brightness(1.1);
+        }
+
+        /* Insights 스타일 */
+        .insight-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+
+        .insight-item.success {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+        }
+
+        .insight-item.warning {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+
+        .insight-item.info {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .insight-icon {
+            font-size: 1.25rem;
+        }
+
+        .insight-text {
+            color: #374151;
+            font-size: 0.875rem;
+            line-height: 1.4;
+        }
+
+        /* Recommendations 스타일 */
+        .recommendation-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 16px;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+
+        .recommendation-icon {
+            font-size: 1.5rem;
+            margin-top: 2px;
+        }
+
+        .recommendation-content {
+            flex: 1;
+        }
+
+        .recommendation-title {
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 4px;
+        }
+
+        .recommendation-text {
+            color: #6b7280;
+            font-size: 0.875rem;
+            line-height: 1.4;
         }
 
         .timer-info {
             display: flex;
             justify-content: space-between;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 15px;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 16px;
         }
 
         .time-remaining, .next-phase {
@@ -763,27 +1036,29 @@
         }
 
         .time-remaining span:last-child {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #00ff7f;
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: #059669;
         }
 
         .next-phase span:last-child {
-            font-size: 1.2rem;
+            font-size: 1.125rem;
             font-weight: 600;
-            color: #00bfff;
+            color: #2563eb;
         }
 
         .daily-progress {
-            margin-top: 20px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
-            padding: 15px;
+            margin-top: 16px;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 16px;
         }
 
         .daily-progress h5 {
-            margin: 0 0 15px 0;
-            color: rgba(255, 255, 255, 0.9);
+            margin: 0 0 12px 0;
+            color: #374151;
+            font-weight: 600;
         }
 
         .progress-stats {
@@ -795,18 +1070,19 @@
         .stat-item {
             display: flex;
             justify-content: space-between;
-            padding: 10px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
+            padding: 12px;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
         }
 
         .stat-item span:first-child {
-            opacity: 0.8;
+            color: #6b7280;
         }
 
         .stat-item span:last-child {
-            font-weight: bold;
-            color: #00ff7f;
+            font-weight: 600;
+            color: #059669;
         }
     </style>
 </head>
@@ -825,6 +1101,9 @@
         <div class="tab-navigation">
             <button class="tab-btn active" data-tab="scheduling">
                 🏥 업무 스케줄링
+            </button>
+            <button class="tab-btn" data-tab="analytics">
+                📊 패턴 분석
             </button>
             <button class="tab-btn" data-tab="medication">
                 💊 약물 관리
@@ -949,6 +1228,94 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 패턴 분석 탭 -->
+            <div id="analytics-tab" class="tab-panel">
+                <div class="analytics-area">
+                    <h3>📊 개인 패턴 분석</h3>
+                    
+                    <!-- 오늘의 요약 -->
+                    <div class="today-summary">
+                        <h4>📅 오늘의 활동 요약</h4>
+                        <div class="summary-grid">
+                            <div class="summary-card">
+                                <div class="summary-icon">⏰</div>
+                                <div class="summary-info">
+                                    <span class="summary-label">총 업무 시간</span>
+                                    <span class="summary-value" id="today-work-time">0분</span>
+                                </div>
+                            </div>
+                            <div class="summary-card">
+                                <div class="summary-icon">😌</div>
+                                <div class="summary-info">
+                                    <span class="summary-label">총 휴식 시간</span>
+                                    <span class="summary-value" id="today-rest-time">0분</span>
+                                </div>
+                            </div>
+                            <div class="summary-card">
+                                <div class="summary-icon">🔄</div>
+                                <div class="summary-info">
+                                    <span class="summary-label">완료 사이클</span>
+                                    <span class="summary-value" id="today-cycles">0회</span>
+                                </div>
+                            </div>
+                            <div class="summary-card">
+                                <div class="summary-icon">🎯</div>
+                                <div class="summary-info">
+                                    <span class="summary-label">준수율</span>
+                                    <span class="summary-value" id="today-compliance">0%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 주간 패턴 -->
+                    <div class="weekly-pattern">
+                        <h4>📈 주간 패턴 분석</h4>
+                        <div class="pattern-chart">
+                            <div class="chart-header">
+                                <span>일별 업무/휴식 비율</span>
+                                <select id="week-selector">
+                                    <option value="this-week">이번 주</option>
+                                    <option value="last-week">지난 주</option>
+                                </select>
+                            </div>
+                            <div class="weekly-bars" id="weekly-chart">
+                                <!-- 차트가 여기에 동적으로 생성됩니다 -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 개인화된 인사이트 -->
+                    <div class="insights-section">
+                        <h4>💡 개인화된 인사이트</h4>
+                        <div class="insights-grid" id="insights-container">
+                            <!-- 인사이트가 동적으로 생성됩니다 -->
+                        </div>
+                    </div>
+
+                    <!-- 권장사항 -->
+                    <div class="recommendations">
+                        <h4>🎯 맞춤 권장사항</h4>
+                        <div class="recommendation-list" id="recommendations-list">
+                            <div class="empty-state">충분한 데이터가 수집되면 맞춤 권장사항을 제공합니다.</div>
+                        </div>
+                    </div>
+
+                    <!-- 데이터 관리 -->
+                    <div class="data-management">
+                        <h4>🗂️ 데이터 관리</h4>
+                        <div class="data-actions">
+                            <button id="export-data-btn" class="add-btn" onclick="exportData()">📤 데이터 내보내기</button>
+                            <button id="clear-data-btn" class="delete-btn" onclick="clearAllData()">🗑️ 데이터 초기화</button>
+                        </div>
+                        <div class="data-info">
+                            <p>수집된 데이터: <span id="data-entries-count">0</span>개 기록</p>
+                            <p>분석 기간: <span id="analysis-period">데이터 없음</span></p>
                         </div>
                     </div>
                 </div>
@@ -1660,6 +2027,11 @@
             totalRestTime: 0
         };
 
+        // 패턴 분석을 위한 데이터 저장소
+        let analyticsData = JSON.parse(localStorage.getItem('analyticsData') || '[]');
+        let sessionStartTime = null;
+        let currentSessionData = null;
+
         // 업무 스케줄 시작
         function startWorkSchedule() {
             if (!window.selectedDiseaseInfo) {
@@ -1675,15 +2047,36 @@
             liveTimer.style.display = 'block';
             scheduleDisplay.style.display = 'none';
 
+            // 세션 데이터 초기화
+            sessionStartTime = new Date();
+            currentSessionData = {
+                startTime: sessionStartTime,
+                disease: diseaseInfo.name,
+                plannedWorkDuration: diseaseInfo.workDuration,
+                plannedRestDuration: diseaseInfo.restDuration,
+                actualWorkTime: 0,
+                actualRestTime: 0,
+                completedCycles: 0,
+                interruptions: 0,
+                phases: []
+            };
+
             // 첫 번째 업무 시간으로 시작
             currentPhase = 'work';
             timeRemaining = diseaseInfo.workDuration * 60; // 분을 초로 변환
+            
+            // 첫 번째 페이즈 기록
+            currentSessionData.phases.push({
+                type: 'work',
+                startTime: new Date(),
+                plannedDuration: diseaseInfo.workDuration * 60
+            });
             
             updateTimerDisplay();
             startTimer();
 
             alert(`🚀 ${diseaseInfo.name} 맞춤 스케줄이 시작되었습니다!\n업무시간: ${diseaseInfo.workDuration}분 → 휴식시간: ${diseaseInfo.restDuration}분`);
-            console.log('🚀 업무 스케줄 시작됨');
+            console.log('🚀 업무 스케줄 시작됨 - 데이터 수집 시작');
         }
 
         // 타이머 시작
@@ -1744,28 +2137,64 @@
         function completeCurrentPhase() {
             const diseaseInfo = window.selectedDiseaseInfo;
 
+            if (currentSessionData && currentSessionData.phases.length > 0) {
+                // 현재 페이즈 완료 기록
+                const currentPhaseData = currentSessionData.phases[currentSessionData.phases.length - 1];
+                currentPhaseData.endTime = new Date();
+                currentPhaseData.actualDuration = (currentPhaseData.endTime - currentPhaseData.startTime) / 1000;
+                currentPhaseData.completed = true;
+            }
+
             if (currentPhase === 'work') {
                 // 업무 시간 완료 → 휴식 시간으로 전환
                 dailyStats.completedBlocks++;
                 dailyStats.totalWorkTime += diseaseInfo.workDuration;
+                
+                if (currentSessionData) {
+                    currentSessionData.actualWorkTime += diseaseInfo.workDuration;
+                    currentSessionData.completedCycles++;
+                }
                 
                 showPhaseNotification('업무 시간이 완료되었습니다!', '😌 이제 휴식 시간입니다. 잠시 쉬어가세요.');
                 
                 currentPhase = 'rest';
                 timeRemaining = diseaseInfo.restDuration * 60;
                 
+                // 새 휴식 페이즈 시작
+                if (currentSessionData) {
+                    currentSessionData.phases.push({
+                        type: 'rest',
+                        startTime: new Date(),
+                        plannedDuration: diseaseInfo.restDuration * 60
+                    });
+                }
+                
             } else {
                 // 휴식 시간 완료 → 업무 시간으로 전환
                 dailyStats.totalRestTime += diseaseInfo.restDuration;
+                
+                if (currentSessionData) {
+                    currentSessionData.actualRestTime += diseaseInfo.restDuration;
+                }
                 
                 showPhaseNotification('휴식 시간이 완료되었습니다!', '💼 이제 다시 업무를 시작하세요.');
                 
                 currentPhase = 'work';
                 timeRemaining = diseaseInfo.workDuration * 60;
+                
+                // 새 업무 페이즈 시작
+                if (currentSessionData) {
+                    currentSessionData.phases.push({
+                        type: 'work',
+                        startTime: new Date(),
+                        plannedDuration: diseaseInfo.workDuration * 60
+                    });
+                }
             }
 
             updateTimerDisplay();
             updateProgressBar();
+            updateAnalytics(); // 실시간 분석 업데이트
         }
 
         // 단계 전환 알림
@@ -1816,6 +2245,38 @@
                 scheduleTimer = null;
             }
 
+            // 세션 데이터 저장
+            if (currentSessionData) {
+                // 마지막 페이즈 완료 처리
+                if (currentSessionData.phases.length > 0) {
+                    const lastPhase = currentSessionData.phases[currentSessionData.phases.length - 1];
+                    if (!lastPhase.endTime) {
+                        lastPhase.endTime = new Date();
+                        lastPhase.actualDuration = (lastPhase.endTime - lastPhase.startTime) / 1000;
+                        lastPhase.completed = false; // 중간에 중지됨
+                        
+                        if (currentSessionData) {
+                            currentSessionData.interruptions++;
+                        }
+                    }
+                }
+
+                // 세션 종료 시간 기록
+                currentSessionData.endTime = new Date();
+                currentSessionData.totalDuration = (currentSessionData.endTime - currentSessionData.startTime) / 1000;
+
+                // 준수율 계산
+                const plannedTotal = (currentSessionData.plannedWorkDuration + currentSessionData.plannedRestDuration) * currentSessionData.completedCycles;
+                const actualTotal = currentSessionData.actualWorkTime + currentSessionData.actualRestTime;
+                currentSessionData.complianceRate = plannedTotal > 0 ? (actualTotal / plannedTotal) * 100 : 0;
+
+                // 분석 데이터에 추가
+                analyticsData.push(currentSessionData);
+                localStorage.setItem('analyticsData', JSON.stringify(analyticsData));
+                
+                console.log('📊 세션 데이터 저장됨:', currentSessionData);
+            }
+
             const liveTimer = document.getElementById('live-timer');
             const scheduleDisplay = document.getElementById('schedule-display');
 
@@ -1832,8 +2293,11 @@
             isPaused = false;
             document.getElementById('pause-timer-btn').innerHTML = '⏸️ 일시정지';
 
-            alert('⏹️ 스케줄이 중지되었습니다.');
-            console.log('⏹️ 스케줄 중지됨');
+            // 분석 데이터 업데이트
+            updateAnalytics();
+
+            alert('⏹️ 스케줄이 중지되었습니다.\n세션 데이터가 저장되어 패턴 분석에 활용됩니다.');
+            console.log('⏹️ 스케줄 중지됨 - 데이터 저장 완료');
         }
 
         // 페이지 로드 시 초기화
@@ -1856,6 +2320,10 @@
             // 타이머 컨트롤 초기화
             initTimerControls();
             
+            // Analytics 초기화
+            updateAnalytics();
+            updateDataInfo();
+            
             // 약물 관리 기능 초기화
             setTimeout(() => {
                 if (window.medicationStorage) {
@@ -1867,8 +2335,372 @@
                 }
             }, 500);
             
-            console.log('🏥 질병 검색 + 실시간 타이머 시스템이 준비되었습니다!');
+            console.log('🏥 질병 검색 + 실시간 타이머 + 패턴 분석 시스템이 준비되었습니다!');
         });
+
+        // 분석 데이터 업데이트
+        function updateAnalytics() {
+            if (!analyticsData || analyticsData.length === 0) {
+                displayEmptyAnalytics();
+                return;
+            }
+
+            updateTodaysSummary();
+            updateWeeklyChart();
+            updateInsights();
+            updateRecommendations();
+            updateDataInfo();
+        }
+
+        // 오늘의 활동 요약 업데이트
+        function updateTodaysSummary() {
+            const today = new Date();
+            const todayStr = today.toDateString();
+            
+            // 오늘의 세션들 필터링
+            const todaySessions = analyticsData.filter(session => {
+                const sessionDate = new Date(session.startTime);
+                return sessionDate.toDateString() === todayStr;
+            });
+
+            let totalWorkTime = 0;
+            let totalRestTime = 0;
+            let totalCycles = 0;
+            let totalCompliance = 0;
+
+            todaySessions.forEach(session => {
+                totalWorkTime += session.actualWorkTime || 0;
+                totalRestTime += session.actualRestTime || 0;
+                totalCycles += session.completedCycles || 0;
+                
+                // 순응도 계산 (완료된 페이즈 수 / 전체 페이즈 수)
+                const completedPhases = session.phases.filter(phase => phase.completed).length;
+                const compliance = session.phases.length > 0 ? (completedPhases / session.phases.length) * 100 : 0;
+                totalCompliance += compliance;
+            });
+
+            const avgCompliance = todaySessions.length > 0 ? Math.round(totalCompliance / todaySessions.length) : 0;
+
+            // UI 업데이트
+            document.getElementById('today-work').textContent = `${totalWorkTime}분`;
+            document.getElementById('today-rest').textContent = `${totalRestTime}분`;
+            document.getElementById('today-cycles').textContent = `${totalCycles}회`;
+            document.getElementById('today-compliance').textContent = `${avgCompliance}%`;
+        }
+
+        // 주간 차트 업데이트
+        function updateWeeklyChart() {
+            const today = new Date();
+            const weekData = [];
+            
+            // 지난 7일 데이터 생성
+            for (let i = 6; i >= 0; i--) {
+                const date = new Date(today);
+                date.setDate(date.getDate() - i);
+                
+                const dayStr = date.toDateString();
+                const daySessions = analyticsData.filter(session => {
+                    const sessionDate = new Date(session.startTime);
+                    return sessionDate.toDateString() === dayStr;
+                });
+
+                const dayWorkTime = daySessions.reduce((sum, session) => sum + (session.actualWorkTime || 0), 0);
+                const dayName = date.toLocaleDateString('ko-KR', { weekday: 'short' });
+
+                weekData.push({
+                    day: dayName,
+                    workTime: dayWorkTime,
+                    date: date
+                });
+            }
+
+            // 최대값 찾기 (차트 스케일링용)
+            const maxWorkTime = Math.max(...weekData.map(d => d.workTime), 1);
+
+            // 차트 바 업데이트
+            const barsContainer = document.querySelector('.weekly-bars');
+            barsContainer.innerHTML = weekData.map(dayData => {
+                const heightPercent = (dayData.workTime / maxWorkTime) * 100;
+                const isToday = dayData.date.toDateString() === today.toDateString();
+                
+                return `
+                    <div class="day-bar">
+                        <div class="bar-container">
+                            <div class="work-bar ${isToday ? 'today' : ''}" 
+                                 style="height: ${heightPercent}%" 
+                                 title="${dayData.day}: ${dayData.workTime}분">
+                            </div>
+                        </div>
+                        <span class="day-label">${dayData.day}</span>
+                        <span class="time-label">${dayData.workTime}분</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // 개인화된 인사이트 업데이트
+        function updateInsights() {
+            const insights = generateInsights();
+            const insightsContainer = document.getElementById('insights-list');
+            
+            insightsContainer.innerHTML = insights.map(insight => `
+                <div class="insight-item ${insight.type}">
+                    <span class="insight-icon">${insight.icon}</span>
+                    <span class="insight-text">${insight.text}</span>
+                </div>
+            `).join('');
+        }
+
+        // 인사이트 생성
+        function generateInsights() {
+            const insights = [];
+            const recentSessions = analyticsData.slice(-7); // 최근 7개 세션
+
+            if (recentSessions.length === 0) {
+                return [{ type: 'info', icon: '💡', text: '더 많은 데이터가 수집되면 개인화된 인사이트를 제공해드릴게요.' }];
+            }
+
+            // 평균 순응도 계산
+            const avgCompliance = recentSessions.reduce((sum, session) => {
+                const completedPhases = session.phases.filter(phase => phase.completed).length;
+                const compliance = session.phases.length > 0 ? (completedPhases / session.phases.length) * 100 : 0;
+                return sum + compliance;
+            }, 0) / recentSessions.length;
+
+            // 순응도 기반 인사이트
+            if (avgCompliance >= 80) {
+                insights.push({ type: 'success', icon: '🎉', text: '훌륭합니다! 높은 순응도를 유지하고 있어요.' });
+            } else if (avgCompliance >= 60) {
+                insights.push({ type: 'warning', icon: '📈', text: '순응도가 개선되고 있어요. 조금 더 노력해보세요!' });
+            } else {
+                insights.push({ type: 'info', icon: '💪', text: '스케줄 준수율 향상을 위해 작은 목표부터 시작해보세요.' });
+            }
+
+            // 가장 많이 사용하는 질병 패턴
+            const diseaseCount = {};
+            recentSessions.forEach(session => {
+                diseaseCount[session.disease] = (diseaseCount[session.disease] || 0) + 1;
+            });
+
+            const mostUsedDisease = Object.keys(diseaseCount).reduce((a, b) => 
+                diseaseCount[a] > diseaseCount[b] ? a : b, 
+                Object.keys(diseaseCount)[0]
+            );
+
+            if (mostUsedDisease) {
+                insights.push({ type: 'info', icon: '📋', text: `${mostUsedDisease} 패턴을 가장 많이 사용하고 있어요.` });
+            }
+
+            // 시간대 분석
+            const morningUse = recentSessions.filter(session => {
+                const hour = new Date(session.startTime).getHours();
+                return hour >= 6 && hour < 12;
+            }).length;
+
+            const afternoonUse = recentSessions.filter(session => {
+                const hour = new Date(session.startTime).getHours();
+                return hour >= 12 && hour < 18;
+            }).length;
+
+            if (morningUse > afternoonUse) {
+                insights.push({ type: 'info', icon: '🌅', text: '오전에 활발하게 활동하시는군요!' });
+            } else if (afternoonUse > morningUse) {
+                insights.push({ type: 'info', icon: '🌇', text: '오후에 더 집중하시는 패턴을 보여요.' });
+            }
+
+            return insights;
+        }
+
+        // 추천사항 업데이트
+        function updateRecommendations() {
+            const recommendations = generateRecommendations();
+            const recommendationsContainer = document.getElementById('recommendations-list');
+            
+            recommendationsContainer.innerHTML = recommendations.map(rec => `
+                <div class="recommendation-item">
+                    <span class="recommendation-icon">${rec.icon}</span>
+                    <div class="recommendation-content">
+                        <div class="recommendation-title">${rec.title}</div>
+                        <div class="recommendation-text">${rec.text}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 추천사항 생성
+        function generateRecommendations() {
+            const recommendations = [];
+            const recentSessions = analyticsData.slice(-5);
+
+            if (recentSessions.length === 0) {
+                return [{
+                    icon: '🚀',
+                    title: '첫 세션 시작하기',
+                    text: '질병을 선택하고 첫 번째 업무 스케줄을 시작해보세요.'
+                }];
+            }
+
+            // 중단률이 높은 경우
+            const interruptionRate = recentSessions.reduce((sum, session) => 
+                sum + (session.interruptions || 0), 0) / recentSessions.length;
+
+            if (interruptionRate > 1) {
+                recommendations.push({
+                    icon: '⚡',
+                    title: '짧은 시간부터 시작',
+                    text: '업무 시간을 줄여서 꾸준함을 먼저 만들어보세요.'
+                });
+            }
+
+            // 휴식 시간 부족
+            const avgRestCompliance = recentSessions.reduce((sum, session) => {
+                const restPhases = session.phases.filter(phase => phase.type === 'rest');
+                const completedRest = restPhases.filter(phase => phase.completed).length;
+                return sum + (restPhases.length > 0 ? completedRest / restPhases.length : 0);
+            }, 0) / recentSessions.length;
+
+            if (avgRestCompliance < 0.7) {
+                recommendations.push({
+                    icon: '😌',
+                    title: '휴식 시간 지키기',
+                    text: '건강한 업무 패턴을 위해 휴식 시간도 꼭 지켜주세요.'
+                });
+            }
+
+            // 일관성 부족
+            const daySpread = [...new Set(recentSessions.map(session => 
+                new Date(session.startTime).toDateString()
+            ))].length;
+
+            if (daySpread < recentSessions.length / 2) {
+                recommendations.push({
+                    icon: '📅',
+                    title: '꾸준한 활동',
+                    text: '매일 조금씩이라도 활동하는 것이 건강 관리에 도움됩니다.'
+                });
+            }
+
+            // 기본 추천사항
+            if (recommendations.length === 0) {
+                recommendations.push({
+                    icon: '🎯',
+                    title: '현재 패턴 유지',
+                    text: '좋은 패턴을 유지하고 있습니다. 계속 꾸준히 해보세요!'
+                });
+            }
+
+            return recommendations.slice(0, 3); // 최대 3개만 표시
+        }
+
+        // 빈 분석 화면 표시
+        function displayEmptyAnalytics() {
+            const sections = ['today-work', 'today-rest', 'today-cycles', 'today-compliance'];
+            sections.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) element.textContent = '0';
+            });
+
+            const barsContainer = document.querySelector('.weekly-bars');
+            if (barsContainer) {
+                barsContainer.innerHTML = `
+                    <div class="empty-chart">
+                        <span>📊</span>
+                        <p>데이터를 수집 중입니다...</p>
+                    </div>
+                `;
+            }
+
+            const insightsContainer = document.getElementById('insights-list');
+            if (insightsContainer) {
+                insightsContainer.innerHTML = `
+                    <div class="insight-item info">
+                        <span class="insight-icon">💡</span>
+                        <span class="insight-text">업무 스케줄을 시작하면 개인화된 분석을 제공해드릴게요.</span>
+                    </div>
+                `;
+            }
+
+            const recommendationsContainer = document.getElementById('recommendations-list');
+            if (recommendationsContainer) {
+                recommendationsContainer.innerHTML = `
+                    <div class="recommendation-item">
+                        <span class="recommendation-icon">🚀</span>
+                        <div class="recommendation-content">
+                            <div class="recommendation-title">첫 세션 시작하기</div>
+                            <div class="recommendation-text">질병을 선택하고 첫 번째 업무 스케줄을 시작해보세요.</div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // 데이터 내보내기 기능 추가
+        function exportData() {
+            if (!analyticsData || analyticsData.length === 0) {
+                alert('내보낼 데이터가 없습니다.');
+                return;
+            }
+
+            const dataToExport = {
+                exportDate: new Date().toISOString(),
+                totalSessions: analyticsData.length,
+                data: analyticsData
+            };
+
+            const dataStr = JSON.stringify(dataToExport, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(dataBlob);
+            link.download = `wonik-health-data-${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+
+            alert('✅ 데이터가 성공적으로 내보내졌습니다!');
+        }
+
+        // 데이터 지우기 기능 추가
+        function clearAllData() {
+            if (!confirm('정말로 모든 분석 데이터를 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.')) {
+                return;
+            }
+
+            if (!confirm('마지막 확인: 정말로 삭제하시겠습니까?')) {
+                return;
+            }
+
+            analyticsData = [];
+            localStorage.removeItem('analyticsData');
+            displayEmptyAnalytics();
+            updateDataInfo();
+            
+            alert('✅ 모든 분석 데이터가 삭제되었습니다.');
+            console.log('🗑️ 분석 데이터 전체 삭제됨');
+        }
+
+        // 데이터 정보 업데이트
+        function updateDataInfo() {
+            const dataCount = analyticsData ? analyticsData.length : 0;
+            const dataCountElement = document.getElementById('data-entries-count');
+            const analysisPeriodElement = document.getElementById('analysis-period');
+            
+            if (dataCountElement) {
+                dataCountElement.textContent = dataCount;
+            }
+            
+            if (analysisPeriodElement && dataCount > 0) {
+                const oldestSession = new Date(Math.min(...analyticsData.map(s => new Date(s.startTime))));
+                const newestSession = new Date(Math.max(...analyticsData.map(s => new Date(s.startTime))));
+                
+                if (oldestSession.toDateString() === newestSession.toDateString()) {
+                    analysisPeriodElement.textContent = oldestSession.toLocaleDateString('ko-KR');
+                } else {
+                    analysisPeriodElement.textContent = 
+                        `${oldestSession.toLocaleDateString('ko-KR')} ~ ${newestSession.toLocaleDateString('ko-KR')}`;
+                }
+            } else if (analysisPeriodElement) {
+                analysisPeriodElement.textContent = '데이터 없음';
+            }
+        }
     </script>
 </body>
 </html>

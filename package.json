@@ -3,22 +3,55 @@
   "version": "1.0.0",
   "description": "질병별 맞춤 업무 스케줄링 일렉트론 앱",
   "main": "main.js",
+  "homepage": "https://github.com/ohjih/wonik-health-planning",
   "scripts": {
     "start": "electron .",
-    "dev": "electron . --enable-logging"
+    "dev": "electron . --enable-logging",
+    "build": "electron-builder",
+    "build:win": "electron-builder --win",
+    "build:dir": "electron-builder --dir",
+    "dist": "npm run build"
   },
   "keywords": [
     "electron",
     "health",
     "scheduling",
-    "wonik"
+    "wonik",
+    "productivity",
+    "medical",
+    "timer"
   ],
-  "author": "지훈 (원익IPS)",
+  "author": {
+    "name": "지훈",
+    "company": "원익IPS"
+  },
   "license": "MIT",
   "devDependencies": {
-    "electron": "^28.0.0"
+    "electron": "^28.0.0",
+    "electron-builder": "^26.0.12"
   },
-  "dependencies": {
-    "better-sqlite3": "^12.2.0"
+  "dependencies": {},
+  "build": {
+    "appId": "com.wonik.health-planning",
+    "productName": "Wonik Health",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "index.html", 
+      "storage.js",
+      "package.json",
+      "!node_modules"
+    ],
+    "nodeGypRebuild": false,
+    "npmRebuild": false,
+    "win": {
+      "target": "portable",
+      "requestedExecutionLevel": "asInvoker"
+    },
+    "portable": {
+      "artifactName": "WonikHealth-Portable-${version}.exe"
+    }
   }
 }
