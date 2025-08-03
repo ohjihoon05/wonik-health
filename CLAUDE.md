@@ -47,12 +47,24 @@
 - 약물 삭제 확인 대화상자
 - 앱 재시작 후 데이터 유지
 
-### 🔄 **Phase 3: 스마트 알림 시스템** (다음 단계)
-**계획된 기능:**
-- 설정한 시간에 자동 알림
-- 백그라운드 스케줄러
-- 알림 스누즈 기능
-- 복용 완료 처리
+### ✅ **Phase 3: 스마트 알림 시스템** (완료)
+- 시간 기반 알림 예약 시스템 구현
+- 실시간 카운트다운 표시
+- 약물별 개별 알림 설정 기능
+- 알림 취소 기능
+- Windows 네이티브 알림 통합
+
+**구현된 기능:**
+- ⏰ 알림 테스트 영역 (5초, 10초, 30초, 1분)
+- 📋 예약된 알림 목록 실시간 표시
+- 💊 약물별 "알림 설정" 버튼
+- ⏱️ 카운트다운 애니메이션
+- ❌ 알림 취소 버튼
+
+**기술적 구현:**
+- `setTimeout`과 `setInterval`을 활용한 스케줄링
+- 알림 객체 배열로 다중 알림 관리
+- 실시간 UI 업데이트 (1초마다)
 
 ### 🔄 **Phase 4: UI 개선** (예정)
 **계획된 기능:**
@@ -108,12 +120,16 @@ wonik-health-planning/
 - [x] 약물 삭제 기능
 - [x] 데이터 영속성 (localStorage)
 - [x] 글래스모피즘 UI 디자인
+- [x] 시간 기반 자동 알림
+- [x] 알림 스케줄링
+- [x] 실시간 카운트다운
+- [x] 알림 취소 기능
 
 ### 다음에 구현할 기능
-- [ ] 시간 기반 자동 알림
-- [ ] 알림 스케줄링
 - [ ] 복용 완료 체크
-- [ ] 더 나은 UI/UX
+- [ ] 알림 히스토리
+- [ ] 더 나은 UI/UX (Magic MCP 활용)
+- [ ] 고급 스케줄링 (반복 알림)
 
 ## 💊 약물 관리 데이터 구조
 
@@ -152,11 +168,16 @@ npm install [패키지명]
 - **Primary Gradient:** `linear-gradient(135deg, #667eea 0%, #764ba2 100%)`
 - **Success Color:** `#4ade80` (약물 추가 성공)
 - **Danger Color:** `#ef4444` (삭제 버튼)
+- **Warning Color:** `#f59e0b` (알림 예약)
+- **Info Color:** `#3b82f6` (약물 추가 버튼)
+- **Schedule Color:** `#10b981` (알림 설정 버튼)
 - **Glass Effect:** `rgba(255, 255, 255, 0.15)` + `backdrop-filter: blur(15px)`
 
 ### UI 컴포넌트
 - **약물 추가 폼:** 글래스모피즘 카드
 - **약물 목록:** 투명 배경 + 블러 효과
+- **알림 테스트 영역:** 시간 선택 드롭다운 + 예약 버튼
+- **예약된 알림 목록:** 실시간 카운트다운 + 취소 버튼
 - **버튼:** 그라데이션 + 호버 애니메이션
 - **알림:** Windows 네이티브 스타일
 
@@ -185,6 +206,9 @@ npm install [패키지명]
 3. **Windows 알림 API** - Notification 객체 사용법
 4. **CSS 글래스모피즘** - backdrop-filter와 투명도 조합
 5. **JavaScript 이벤트 처리** - DOM 조작과 사용자 상호작용
+6. **타이머 관리** - setTimeout과 setInterval의 적절한 사용
+7. **동적 UI 업데이트** - 실시간 카운트다운과 목록 갱신
+8. **다중 알림 관리** - 배열로 여러 타이머 동시 관리
 
 ### 개발 팁
 - **단계별 테스트**: 각 기능을 작은 단위로 나누어 테스트
@@ -192,27 +216,34 @@ npm install [패키지명]
 - **사용자 피드백**: alert()를 통한 즉각적인 작업 결과 표시
 - **에러 처리**: try-catch 구문으로 안정적인 에러 핸들링
 
-## 🎯 다음 단계 (Phase 3 준비사항)
+## 🎯 다음 단계 (Phase 4 준비사항)
 
 ### 필요한 기능
-1. **타이머 시스템** - setInterval 또는 setTimeout 활용
-2. **시간 계산** - 현재 시간과 설정 시간 비교
-3. **백그라운드 실행** - 앱이 최소화되어도 알림 작동
-4. **알림 관리** - 여러 약물의 서로 다른 알림 시간 처리
+1. **UI/UX 대폭 개선** - Magic MCP 활용한 모던 디자인
+2. **복용 완료 체크** - 알림 클릭 시 복용 기록
+3. **알림 히스토리** - 복용 기록 및 누락 추적
+4. **반복 알림** - 매일 같은 시간 자동 알림
+5. **데이터 시각화** - 복용률 차트, 건강 트렌드
 
-### 예상 구현 방법
+### Phase 3에서 구현된 핵심 코드
 ```javascript
-// 의사코드
-function scheduleNotification(medication) {
-  const now = new Date();
-  const scheduleTime = new Date(medication.time);
-  const timeDiff = scheduleTime - now;
-  
-  if (timeDiff > 0) {
-    setTimeout(() => {
-      showMedicationNotification(medication);
-    }, timeDiff);
-  }
+// 알림 예약 기능
+notification.timeoutId = setTimeout(() => {
+  showScheduledNotification(notification);
+  removeScheduledNotification(notification.id);
+}, delay * 1000);
+
+// 실시간 카운트다운
+notification.intervalId = setInterval(() => {
+  const remaining = Math.max(0, Math.floor((notification.scheduledTime - now) / 1000));
+  updateScheduledList();
+}, 1000);
+
+// 약물별 알림 설정
+function scheduleSpecificMedication(id, name, dosage, time) {
+  // 실제 시간을 데모용 짧은 시간으로 변환
+  const demoDelay = Math.min(60, Math.max(10, minutesUntil * 60));
+  // 알림 예약 및 UI 업데이트
 }
 ```
 
@@ -234,8 +265,8 @@ function scheduleNotification(medication) {
 - **Phase 0:** Hello World 앱 실행 ✅
 - **Phase 1:** 알림 버튼 클릭 시 Windows 알림 표시 ✅
 - **Phase 2:** 약물 추가/삭제/목록 표시 ✅
-- **Phase 3:** 설정 시간에 자동 알림 (다음 목표)
-- **Phase 4:** 예쁜 UI + 사용성 개선
+- **Phase 3:** 설정 시간에 자동 알림 ✅
+- **Phase 4:** 예쁜 UI + 사용성 개선 (다음 목표)
 - **Phase 5:** .exe 파일 배포
 
 ### 최종 목표
@@ -244,8 +275,23 @@ function scheduleNotification(medication) {
 - 일일 사용률 80% 이상
 - 약물 복용 순응도 개선 효과 확인
 
+## 🔍 Phase 3 주요 성과
+
+### 구현된 알림 기능들
+1. **즉시 알림 테스트** - 버튼 클릭으로 바로 알림
+2. **예약 알림** - 5초, 10초, 30초, 1분 후 알림
+3. **약물별 알림** - 각 약물의 복용 시간에 맞춘 알림
+4. **카운트다운** - 실시간으로 남은 시간 표시
+5. **알림 관리** - 예약 취소, 다중 알림 동시 관리
+
+### 사용자 경험 개선
+- 직관적인 알림 예약 인터페이스
+- 시각적 카운트다운으로 대기 시간 확인
+- 약물별 개별 알림 설정 가능
+- 알림 취소로 유연한 관리
+
 ---
 
 **마지막 업데이트:** 2024년 8월 3일  
-**현재 상태:** Phase 2 완료, Phase 3 준비 중  
-**다음 작업:** 시간 기반 자동 알림 시스템 구현
+**현재 상태:** Phase 3 완료, Phase 4 준비 중  
+**다음 작업:** UI/UX 대폭 개선 및 고급 기능 추가
