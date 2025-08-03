@@ -1098,14 +1098,14 @@
         </div>
 
         <!-- 탭 네비게이션 -->
-        <div class="tab-navigation">
-            <button class="tab-btn active" data-tab="scheduling">
+        <div class="tab-navigation" role="tablist" aria-label="메인 메뉴">
+            <button class="tab-btn active" data-tab="scheduling" role="tab" aria-selected="true" aria-controls="scheduling-tab" tabindex="0">
                 🏥 업무 스케줄링
             </button>
-            <button class="tab-btn" data-tab="analytics">
+            <button class="tab-btn" data-tab="analytics" role="tab" aria-selected="false" aria-controls="analytics-tab" tabindex="-1">
                 📊 패턴 분석
             </button>
-            <button class="tab-btn" data-tab="medication">
+            <button class="tab-btn" data-tab="medication" role="tab" aria-selected="false" aria-controls="medication-tab" tabindex="-1">
                 💊 약물 관리
             </button>
         </div>
@@ -1113,7 +1113,7 @@
         <!-- 탭 콘텐츠 -->
         <div class="tab-content">
             <!-- 업무 스케줄링 탭 -->
-            <div id="scheduling-tab" class="tab-panel active">
+            <div id="scheduling-tab" class="tab-panel active" role="tabpanel" aria-labelledby="scheduling" tabindex="0">
                 <div class="main-scheduling-area">
                     <h3>🏥 질병별 맞춤 업무 스케줄링</h3>
                     
@@ -1234,7 +1234,7 @@
             </div>
 
             <!-- 패턴 분석 탭 -->
-            <div id="analytics-tab" class="tab-panel">
+            <div id="analytics-tab" class="tab-panel" role="tabpanel" aria-labelledby="analytics" tabindex="0">
                 <div class="analytics-area">
                     <h3>📊 개인 패턴 분석</h3>
                     
@@ -1322,7 +1322,7 @@
             </div>
 
             <!-- 약물 관리 탭 -->
-            <div id="medication-tab" class="tab-panel">
+            <div id="medication-tab" class="tab-panel" role="tabpanel" aria-labelledby="medication" tabindex="0">
                 <!-- 약물 추가 폼 -->
                 <div class="medication-form">
                     <h3>💊 새 약물 추가</h3>
@@ -1392,40 +1392,116 @@
             console.log('❌ 약물 저장소를 찾을 수 없습니다.');
         }
         
-        // 알림 기능 구현
-        document.getElementById('notification-btn').addEventListener('click', () => {
+        // 안전한 알림 표시 함수
+        function showSafeNotification(title, body, options = {}) {
+            try {
+                // 알림 지원 체크
+                if (!('Notification' in window)) {
+                    throw new Error('이 브라우저는 알림을 지원하지 않습니다.');
+                }
+
+                // 권한 체크
+                if (Notification.permission === 'denied') {
+                    throw new Error('알림 권한이 거부되었습니다. 브라우저 설정에서 허용해주세요.');
+                }
+
+                // 권한 요청 후 알림 표시
+                if (Notification.permission === 'default') {
+                    return Notification.requestPermission().then(permission => {
+                        if (permission === 'granted') {
+                            return createNotification(title, body, options);
+                        } else {
+                            throw new Error('알림 권한을 허용해주세요.');
+                        }
+                    });
+                } else {
+                    return Promise.resolve(createNotification(title, body, options));
+                }
+            } catch (error) {
+                console.error('알림 표시 실패:', error);
+                alert(error.message);
+                throw error;
+            }
+        }
+
+        // 실제 알림 생성 함수
+        function createNotification(title, body, options = {}) {
+            try {
+                const notification = new Notification(title, {
+                    body: body,
+                    icon: options.icon || '',
+                    tag: options.tag || 'wonik-health',
+                    requireInteraction: options.requireInteraction || false,
+                    silent: options.silent || false
+                });
+
+                // 알림 이벤트 처리
+                notification.onclick = () => {
+                    console.log('✅ 알림 클릭됨');
+                    if (options.onClick) options.onClick();
+                    notification.close();
+                };
+
+                notification.onshow = () => {
+                    console.log('📢 알림 표시됨');
+                };
+
+                notification.onerror = (err) => {
+                    console.error('알림 표시 오류:', err);
+                    alert('알림 표시 중 오류가 발생했습니다.');
+                };
+
+                return notification;
+            } catch (error) {
+                console.error('알림 생성 실패:', error);
+                alert('알림을 생성할 수 없습니다.');
+                throw error;
+            }
+        }
+
+        // 알림 기능 구현 (에러 처리 강화)
+        document.getElementById('notification-btn').addEventListener('click', async () => {
             console.log('💊 알림 버튼이 클릭되었습니다!');
             
-            // Windows 알림 생성
-            const notification = new Notification('💊 Wonik Health 알림', {
-                body: '약물 복용 시간입니다!\n혈압약 (아모잘탄 5mg) 복용하세요.',
-                icon: './assets/medicine-icon.png', // 아이콘이 없어도 괜찮습니다
-                tag: 'medicine-reminder',
-                requireInteraction: true // 사용자가 확인할 때까지 유지
-            });
-
-            // 알림 클릭 이벤트
-            notification.onclick = () => {
-                console.log('✅ 알림을 클릭했습니다!');
-                alert('알림 기능이 정상적으로 작동합니다! 🎉');
-                notification.close();
-            };
-
-            // 알림이 표시될 때
-            notification.onshow = () => {
-                console.log('📢 알림이 표시되었습니다!');
-            };
-
-            // 성공 피드백
             const button = document.getElementById('notification-btn');
             const originalText = button.innerHTML;
-            button.innerHTML = '✅ 알림 전송됨!';
-            button.style.background = 'linear-gradient(145deg, #22c55e, #16a34a)';
             
-            setTimeout(() => {
-                button.innerHTML = originalText;
-                button.style.background = 'linear-gradient(145deg, #4ade80, #22c55e)';
-            }, 2000);
+            try {
+                // 버튼 상태 변경
+                button.innerHTML = '⏳ 전송 중...';
+                button.disabled = true;
+
+                // 안전한 알림 표시
+                await showSafeNotification(
+                    '💊 Wonik Health 알림',
+                    '약물 복용 시간입니다!\n건강한 하루 되세요!',
+                    {
+                        icon: './assets/medicine-icon.png',
+                        tag: 'medicine-reminder',
+                        requireInteraction: true,
+                        onClick: () => {
+                            alert('알림 기능이 정상적으로 작동합니다! 🎉');
+                        }
+                    }
+                );
+
+                // 성공 피드백
+                button.innerHTML = '✅ 알림 전송됨!';
+                button.style.background = 'linear-gradient(145deg, #22c55e, #16a34a)';
+                
+            } catch (error) {
+                // 실패 피드백
+                button.innerHTML = '❌ 전송 실패';
+                button.style.background = 'linear-gradient(145deg, #ef4444, #dc2626)';
+                console.error('알림 전송 실패:', error);
+            } finally {
+                // 버튼 복원
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.style.background = 'linear-gradient(145deg, #4ade80, #22c55e)';
+                    button.disabled = false;
+                }, 2000);
+            }
         });
 
         // 알림 권한 요청
@@ -1444,14 +1520,74 @@
         // 약물 관리 기능
         let medications = [];
 
-        // 약물 추가 기능
-        document.getElementById('add-medication-btn').addEventListener('click', async () => {
-            const name = document.getElementById('medication-name').value.trim();
-            const dosage = document.getElementById('medication-dosage').value.trim();
-            const time = document.getElementById('medication-time').value;
+        // 데이터 검증 함수들
+        function validateMedicationName(name) {
+            if (!name || name.length < 1) {
+                return { valid: false, message: '약물 이름을 입력해주세요.' };
+            }
+            if (name.length > 50) {
+                return { valid: false, message: '약물 이름은 50자 이하로 입력해주세요.' };
+            }
+            if (!/^[가-힣a-zA-Z0-9\s\-\.]+$/.test(name)) {
+                return { valid: false, message: '약물 이름에는 한글, 영문, 숫자, 공백, 하이픈, 마침표만 사용할 수 있습니다.' };
+            }
+            return { valid: true };
+        }
 
-            if (!name) {
-                alert('약물 이름을 입력해주세요!');
+        function validateDosage(dosage) {
+            if (!dosage) return { valid: true }; // 선택사항
+            if (dosage.length > 20) {
+                return { valid: false, message: '용량은 20자 이하로 입력해주세요.' };
+            }
+            if (!/^[0-9]+(\.[0-9]+)?\s*(mg|g|ml|정|캡슐|알)?$/i.test(dosage)) {
+                return { valid: false, message: '올바른 용량 형식을 입력해주세요. (예: 5mg, 10정)' };
+            }
+            return { valid: true };
+        }
+
+        function validateTime(time) {
+            if (!time) return { valid: true }; // 선택사항
+            const timeRegex = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/;
+            if (!timeRegex.test(time)) {
+                return { valid: false, message: '올바른 시간 형식을 입력해주세요. (예: 08:30)' };
+            }
+            return { valid: true };
+        }
+
+        function sanitizeInput(input) {
+            // HTML 태그 제거 및 특수문자 이스케이프
+            return input.replace(/<[^>]*>?/gm, '').replace(/[<>'"&]/g, '');
+        }
+
+        // 약물 추가 기능 (검증 강화)
+        document.getElementById('add-medication-btn').addEventListener('click', async () => {
+            const nameInput = document.getElementById('medication-name');
+            const dosageInput = document.getElementById('medication-dosage');
+            const timeInput = document.getElementById('medication-time');
+
+            const name = sanitizeInput(nameInput.value.trim());
+            const dosage = sanitizeInput(dosageInput.value.trim());
+            const time = timeInput.value;
+
+            // 입력값 검증
+            const nameValidation = validateMedicationName(name);
+            if (!nameValidation.valid) {
+                alert(nameValidation.message);
+                nameInput.focus();
+                return;
+            }
+
+            const dosageValidation = validateDosage(dosage);
+            if (!dosageValidation.valid) {
+                alert(dosageValidation.message);
+                dosageInput.focus();
+                return;
+            }
+
+            const timeValidation = validateTime(time);
+            if (!timeValidation.valid) {
+                alert(timeValidation.message);
+                timeInput.focus();
                 return;
             }
 
@@ -1761,26 +1897,83 @@
             });
         }
 
-        // 탭 전환 기능
+        // 탭 전환 기능 (접근성 강화)
         function initTabs() {
             const tabBtns = document.querySelectorAll('.tab-btn');
             const tabPanels = document.querySelectorAll('.tab-panel');
 
-            tabBtns.forEach(btn => {
+            tabBtns.forEach((btn, index) => {
+                // 클릭 이벤트
                 btn.addEventListener('click', () => {
-                    const targetTab = btn.getAttribute('data-tab');
-                    
-                    // 모든 탭 버튼과 패널에서 active 클래스 제거
-                    tabBtns.forEach(b => b.classList.remove('active'));
-                    tabPanels.forEach(p => p.classList.remove('active'));
-                    
-                    // 클릭된 탭 버튼과 해당 패널에 active 클래스 추가
-                    btn.classList.add('active');
-                    document.getElementById(targetTab + '-tab').classList.add('active');
-                    
-                    console.log(`📋 ${targetTab} 탭으로 전환되었습니다.`);
+                    switchTab(btn, tabBtns, tabPanels);
+                });
+                
+                // 키보드 네비게이션
+                btn.addEventListener('keydown', (e) => {
+                    handleTabKeydown(e, tabBtns, tabPanels, index);
                 });
             });
+        }
+
+        // 탭 전환 함수
+        function switchTab(activeButton, allButtons, allPanels) {
+            const targetTab = activeButton.getAttribute('data-tab');
+            
+            // 모든 탭 버튼과 패널 비활성화
+            allButtons.forEach(btn => {
+                btn.classList.remove('active');
+                btn.setAttribute('aria-selected', 'false');
+                btn.setAttribute('tabindex', '-1');
+            });
+            allPanels.forEach(panel => {
+                panel.classList.remove('active');
+            });
+            
+            // 활성 탭 설정
+            activeButton.classList.add('active');
+            activeButton.setAttribute('aria-selected', 'true');
+            activeButton.setAttribute('tabindex', '0');
+            
+            const targetPanel = document.getElementById(`${targetTab}-tab`);
+            targetPanel.classList.add('active');
+            
+            console.log(`📋 ${targetTab} 탭으로 전환되었습니다.`);
+        }
+
+        // 키보드 네비게이션 핸들러
+        function handleTabKeydown(e, tabButtons, tabPanels, currentIndex) {
+            let newIndex = currentIndex;
+            
+            switch(e.key) {
+                case 'ArrowLeft':
+                case 'ArrowUp':
+                    e.preventDefault();
+                    newIndex = currentIndex > 0 ? currentIndex - 1 : tabButtons.length - 1;
+                    break;
+                case 'ArrowRight':
+                case 'ArrowDown':
+                    e.preventDefault();
+                    newIndex = currentIndex < tabButtons.length - 1 ? currentIndex + 1 : 0;
+                    break;
+                case 'Home':
+                    e.preventDefault();
+                    newIndex = 0;
+                    break;
+                case 'End':
+                    e.preventDefault();
+                    newIndex = tabButtons.length - 1;
+                    break;
+                case 'Enter':
+                case ' ':
+                    e.preventDefault();
+                    switchTab(tabButtons[currentIndex], tabButtons, tabPanels);
+                    return;
+                default:
+                    return;
+            }
+            
+            // 새 탭으로 포커스 이동
+            tabButtons[newIndex].focus();
         }
 
         // 질병 데이터베이스 (확장 가능)
