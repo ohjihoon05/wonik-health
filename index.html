@@ -280,6 +280,170 @@
             background: #dc2626;
         }
 
+        /* 약물 정보 버튼 */
+        .info-btn {
+            background: #7c3aed;
+            color: white;
+            border: none;
+            padding: 12px 16px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-family: inherit;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .info-btn:hover {
+            background: #6d28d9;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-btn:active {
+            background: #5b21b6;
+            transform: translateY(1px);
+        }
+
+        /* 약물 정보 카드 */
+        .medication-info-card {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 0;
+            margin-top: 20px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .info-header {
+            background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+            color: white;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .info-header h4 {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .close-info-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: background-color 0.15s ease;
+        }
+
+        .close-info-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .info-content {
+            padding: 20px;
+        }
+
+        .info-row {
+            display: flex;
+            margin-bottom: 12px;
+            align-items: flex-start;
+        }
+
+        .info-section {
+            margin-bottom: 16px;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #374151;
+            min-width: 80px;
+            margin-right: 12px;
+            font-size: 0.875rem;
+        }
+
+        .info-row span:last-child {
+            color: #6b7280;
+            line-height: 1.5;
+            font-size: 0.875rem;
+        }
+
+        .info-section ul {
+            margin: 8px 0 0 92px;
+            padding: 0;
+            list-style: none;
+        }
+
+        .info-section li {
+            color: #6b7280;
+            font-size: 0.875rem;
+            margin-bottom: 4px;
+            padding-left: 12px;
+            position: relative;
+        }
+
+        .info-section li:before {
+            content: "•";
+            color: #9ca3af;
+            position: absolute;
+            left: 0;
+        }
+
+        /* 약물 정보 로딩 */
+        .info-progress {
+            background: #f3f4f6;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 16px;
+            text-align: center;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #e5e7eb;
+            border-radius: 3px;
+            margin-bottom: 12px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #7c3aed, #a855f7);
+            border-radius: 3px;
+            width: 0%;
+            animation: progressLoading 2s ease-in-out infinite;
+        }
+
+        @keyframes progressLoading {
+            0%, 100% { width: 0%; }
+            50% { width: 100%; }
+        }
+
+        .progress-text {
+            color: #6b7280;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
         /* 패턴 분석 스타일 */
         .analytics-area {
             background: #ffffff;
@@ -1517,6 +1681,43 @@
                 <input type="text" id="medication-dosage" placeholder="용량 (예: 5mg)" class="form-input">
                 <input type="time" id="medication-time" class="form-input">
                 <button id="add-medication-btn" class="add-btn">추가</button>
+                <button id="get-medication-info-btn" class="info-btn">🔍 약물정보</button>
+            </div>
+            
+            <!-- 약물 정보 표시 영역 -->
+            <div id="medication-info-display" style="display: none;" class="medication-info-card">
+                <div class="info-header">
+                    <h4 id="info-medication-name">약물 정보</h4>
+                    <button id="close-info-btn" class="close-info-btn">✕</button>
+                </div>
+                <div class="info-content">
+                    <div class="info-row">
+                        <span class="info-label">종류:</span>
+                        <span id="info-category">-</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">효능:</span>
+                        <span id="info-effects">-</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">복용법:</span>
+                        <span id="info-usage">-</span>
+                    </div>
+                    <div class="info-section">
+                        <span class="info-label">⚠️ 주의사항:</span>
+                        <ul id="info-warnings"></ul>
+                    </div>
+                    <div class="info-section">
+                        <span class="info-label">🔸 부작용:</span>
+                        <ul id="info-side-effects"></ul>
+                    </div>
+                    <div class="info-progress" id="medication-info-progress" style="display: none;">
+                        <div class="progress-bar">
+                            <div class="progress-fill"></div>
+                        </div>
+                        <span class="progress-text">AI가 약물 정보를 조회중입니다...</span>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -3323,6 +3524,193 @@
             } else if (analysisPeriodElement) {
                 analysisPeriodElement.textContent = '데이터 없음';
             }
+        }
+
+        // ========== 약물 정보 조회 기능 ==========
+
+        // 약물 정보 조회 버튼 이벤트
+        document.getElementById('get-medication-info-btn').addEventListener('click', async () => {
+            const nameInput = document.getElementById('medication-name');
+            const medicationName = sanitizeInput(nameInput.value.trim());
+            
+            if (!medicationName) {
+                alert('약물 이름을 입력해주세요.');
+                nameInput.focus();
+                return;
+            }
+
+            console.log('🔍 약물 정보 조회 시작:', medicationName);
+            
+            // UI 상태 변경
+            showMedicationInfoLoading(medicationName);
+
+            try {
+                let medicationInfo;
+                
+                // Electron 환경에서만 AI 조회 시도
+                if (window.electronAPI) {
+                    try {
+                        console.log('🤖 AI로 약물 정보 조회 중...');
+                        medicationInfo = await window.electronAPI.getMedicationInfo(medicationName);
+                        console.log('✅ AI 약물 정보 수신:', medicationInfo);
+                    } catch (aiError) {
+                        console.warn('⚠️ AI 조회 실패, 오프라인 정보 사용:', aiError);
+                        // AI 실패시 오프라인 정보 사용
+                        medicationInfo = getOfflineMedicationInfo(medicationName);
+                    }
+                } else {
+                    console.warn('⚠️ electronAPI가 없습니다. 오프라인 정보 사용');
+                    medicationInfo = getOfflineMedicationInfo(medicationName);
+                }
+
+                // UI에 정보 표시
+                displayMedicationInfo(medicationInfo);
+                
+            } catch (error) {
+                console.error('❌ 약물 정보 조회 오류:', error);
+                hideMedicationInfoDisplay();
+                alert('약물 정보 조회 중 오류가 발생했습니다.');
+            }
+        });
+
+        // 약물 정보 표시 영역 닫기 버튼
+        document.getElementById('close-info-btn').addEventListener('click', () => {
+            hideMedicationInfoDisplay();
+        });
+
+        // 약물 정보 로딩 상태 표시
+        function showMedicationInfoLoading(medicationName) {
+            const display = document.getElementById('medication-info-display');
+            const progress = document.getElementById('medication-info-progress');
+            const nameElement = document.getElementById('info-medication-name');
+            
+            nameElement.textContent = `${medicationName} - 정보 조회중`;
+            progress.style.display = 'block';
+            display.style.display = 'block';
+            
+            // 모든 정보 초기화
+            document.getElementById('info-category').textContent = '-';
+            document.getElementById('info-effects').textContent = '-';
+            document.getElementById('info-usage').textContent = '-';
+            document.getElementById('info-warnings').innerHTML = '';
+            document.getElementById('info-side-effects').innerHTML = '';
+        }
+
+        // 약물 정보 표시
+        function displayMedicationInfo(info) {
+            const progress = document.getElementById('medication-info-progress');
+            const nameElement = document.getElementById('info-medication-name');
+            
+            // 로딩 숨김
+            progress.style.display = 'none';
+            
+            // 정보 업데이트
+            nameElement.textContent = `💊 ${info.name}`;
+            document.getElementById('info-category').textContent = info.category || '-';
+            document.getElementById('info-effects').textContent = info.effects || '-';
+            document.getElementById('info-usage').textContent = info.usage || '-';
+            
+            // 주의사항 목록
+            const warningsList = document.getElementById('info-warnings');
+            warningsList.innerHTML = '';
+            if (info.warnings && info.warnings.length > 0) {
+                info.warnings.forEach(warning => {
+                    const li = document.createElement('li');
+                    li.textContent = warning;
+                    warningsList.appendChild(li);
+                });
+            } else {
+                warningsList.innerHTML = '<li>정보가 없습니다</li>';
+            }
+            
+            // 부작용 목록
+            const sideEffectsList = document.getElementById('info-side-effects');
+            sideEffectsList.innerHTML = '';
+            if (info.sideEffects && info.sideEffects.length > 0) {
+                info.sideEffects.forEach(sideEffect => {
+                    const li = document.createElement('li');
+                    li.textContent = sideEffect;
+                    sideEffectsList.appendChild(li);
+                });
+            } else {
+                sideEffectsList.innerHTML = '<li>정보가 없습니다</li>';
+            }
+            
+            console.log('✅ 약물 정보 UI 업데이트 완료');
+        }
+
+        // 약물 정보 표시 영역 숨김
+        function hideMedicationInfoDisplay() {
+            const display = document.getElementById('medication-info-display');
+            display.style.display = 'none';
+        }
+
+        // 오프라인 약물 정보 (백업용)
+        function getOfflineMedicationInfo(medicationName) {
+            const knownMedications = {
+                '타이레놀': {
+                    name: '타이레놀',
+                    category: '해열진통제',
+                    effects: '발열, 두통, 관절통, 근육통 완화',
+                    usage: '성인 1회 500-1000mg, 4-6시간마다 복용',
+                    warnings: ['간 질환자 주의', '알코올과 함께 복용 금지', '1일 4000mg 초과 금지'],
+                    sideEffects: ['메스꺼움', '간 손상 위험', '알레르기 반응']
+                },
+                '아스피린': {
+                    name: '아스피린',
+                    category: '해열진통소염제',
+                    effects: '해열, 진통, 항염, 혈전 예방',
+                    usage: '성인 1회 500mg, 4시간마다 복용',
+                    warnings: ['위궤양 환자 금기', '출혈 위험 증가', '18세 미만 사용 금지'],
+                    sideEffects: ['위장 장애', '출혈', '이명']
+                },
+                '게보린': {
+                    name: '게보린',
+                    category: '복합 진통제',
+                    effects: '두통, 치통, 생리통, 근육통 완화',
+                    usage: '성인 1회 1-2정, 1일 3-4회',
+                    warnings: ['카페인 함유로 과량 복용 주의', '임산부 사용 금지', '위장 장애 시 주의'],
+                    sideEffects: ['위장 불편', '불면', '신경과민']
+                },
+                '펜잘': {
+                    name: '펜잘',
+                    category: '복합 감기약',
+                    effects: '감기 증상 완화 (콧물, 기침, 발열)',
+                    usage: '성인 1회 1포, 1일 3회 식후 복용',
+                    warnings: ['졸음 유발 가능', '운전 시 주의', '알코올과 병용 금지'],
+                    sideEffects: ['졸음', '입마름', '변비']
+                },
+                '낙센': {
+                    name: '낙센',
+                    category: '소염진통제',
+                    effects: '관절염, 근육통, 염좌 등 염증성 통증 완화',
+                    usage: '성인 1회 220mg, 1일 2-3회',
+                    warnings: ['위궤양 환자 금기', '신장 질환자 주의', '심혈관 위험 증가'],
+                    sideEffects: ['위장 장애', '두통', '현기증']
+                }
+            };
+
+            // 약물명 정규화
+            const normalizedName = medicationName.replace(/\s/g, '').toLowerCase();
+            
+            // 매칭되는 약물 찾기
+            for (const [key, value] of Object.entries(knownMedications)) {
+                if (normalizedName.includes(key.toLowerCase()) || 
+                    key.toLowerCase().includes(normalizedName)) {
+                    return { ...value, generated: new Date().toISOString() };
+                }
+            }
+
+            // 기본값 반환
+            return {
+                name: medicationName,
+                category: '의약품',
+                effects: '의사나 약사에게 문의하시기 바랍니다',
+                usage: '처방전 또는 포장지의 복용법을 따르세요',
+                warnings: ['의료진과 상담 후 복용', '알레르기 반응 주의', '용법 용량 준수'],
+                sideEffects: ['개인차에 따른 부작용 가능', '알레르기 반응', '위장 장애'],
+                generated: new Date().toISOString()
+            };
         }
     </script>
 </body>

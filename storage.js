@@ -34,7 +34,9 @@ class MedicationStorage {
                 dosage: medicationData.dosage || '',
                 time: medicationData.time || '',
                 notes: medicationData.notes || '',
-                created_at: new Date().toISOString()
+                created_at: new Date().toISOString(),
+                // AI 정보 필드 추가
+                aiInfo: medicationData.aiInfo || null
             };
             
             medications.push(newMedication);
@@ -45,6 +47,44 @@ class MedicationStorage {
         } catch (error) {
             console.error('❌ 약물 추가 실패:', error);
             return { success: false, error: error.message };
+        }
+    }
+
+    // 약물 업데이트 (AI 정보 추가용)
+    update(id, updateData) {
+        try {
+            const medications = this.getAll();
+            const medicationIndex = medications.findIndex(med => med.id === parseInt(id));
+            
+            if (medicationIndex === -1) {
+                return { success: false, error: '약물을 찾을 수 없습니다.' };
+            }
+
+            // 기존 데이터에 새 데이터 병합
+            medications[medicationIndex] = {
+                ...medications[medicationIndex],
+                ...updateData,
+                updated_at: new Date().toISOString()
+            };
+
+            localStorage.setItem(this.storageKey, JSON.stringify(medications));
+            
+            console.log(`✅ 약물 정보 업데이트됨: ${medications[medicationIndex].name} (ID: ${id})`);
+            return { success: true, medication: medications[medicationIndex] };
+        } catch (error) {
+            console.error('❌ 약물 업데이트 실패:', error);
+            return { success: false, error: error.message };
+        }
+    }
+
+    // 특정 약물 조회
+    getById(id) {
+        try {
+            const medications = this.getAll();
+            return medications.find(med => med.id === parseInt(id)) || null;
+        } catch (error) {
+            console.error('❌ 약물 조회 실패:', error);
+            return null;
         }
     }
 

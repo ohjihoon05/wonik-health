@@ -37,6 +37,11 @@ contextBridge.exposeInMainWorld('electronAPI', {
     return await ipcRenderer.invoke('check-ollama-status');
   },
   
+  // 약물 정보 조회 API
+  getMedicationInfo: async (medicationName, modelName) => {
+    return await ipcRenderer.invoke('get-medication-info', medicationName, modelName);
+  },
+  
   // localStorage는 웹 표준이므로 직접 사용 가능
   // 추가 보안 계층이 필요한 경우에만 래퍼 생성
 });

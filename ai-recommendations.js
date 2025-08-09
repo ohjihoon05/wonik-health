@@ -371,6 +371,184 @@ Be brief. No disclaimers.`;
         };
     }
 
+    // 약물 정보 조회
+    async getMedicationInfo(medicationName, modelName) {
+        const useModel = modelName || this.model;
+        const prompt = `You are a medical information assistant. For the medication "${medicationName}", provide:
+
+1. 약물 종류: [약물 분류]
+2. 주요 효능: [간단한 효능]
+3. 복용법: [복용 시간과 방법]
+4. 주의사항: [중요 주의점 2-3개]
+5. 부작용: [흔한 부작용 2-3개]
+
+Answer in Korean. Be accurate and concise.`;
+
+        try {
+            console.log(`🏥 AI 약물 정보 조회 중: ${medicationName}`);
+            const response = await this.callOllama(prompt, useModel);
+            return this.parseMedicationInfo(response, medicationName);
+        } catch (error) {
+            console.error('AI 약물 정보 조회 실패:', error);
+            return this.getOfflineMedicationInfo(medicationName);
+        }
+    }
+
+    // AI 약물 정보 파싱
+    parseMedicationInfo(response, medicationName) {
+        let medicationInfo = {
+            name: medicationName,
+            category: '',
+            effects: '',
+            usage: '',
+            warnings: [],
+            sideEffects: [],
+            generated: new Date().toISOString()
+        };
+
+        try {
+            console.log('약물 정보 파싱 시작...');
+
+            const lines = response.split('\n').filter(line => line.trim());
+            
+            for (const line of lines) {
+                const trimmed = line.trim();
+                
+                // 약물 종류
+                if (trimmed.includes('약물 종류') || trimmed.includes('분류')) {
+                    medicationInfo.category = trimmed.split(':')[1]?.trim() || '의약품';
+                }
+                
+                // 주요 효능
+                if (trimmed.includes('주요 효능') || trimmed.includes('효능')) {
+                    medicationInfo.effects = trimmed.split(':')[1]?.trim() || '';
+                }
+                
+                // 복용법
+                if (trimmed.includes('복용법') || trimmed.includes('복용')) {
+                    medicationInfo.usage = trimmed.split(':')[1]?.trim() || '';
+                }
+                
+                // 주의사항
+                if (trimmed.includes('주의사항') || trimmed.includes('주의')) {
+                    const warningText = trimmed.split(':')[1]?.trim();
+                    if (warningText) {
+                        medicationInfo.warnings.push(warningText);
+                    }
+                }
+                
+                // 부작용
+                if (trimmed.includes('부작용')) {
+                    const sideEffectText = trimmed.split(':')[1]?.trim();
+                    if (sideEffectText) {
+                        medicationInfo.sideEffects.push(sideEffectText);
+                    }
+                }
+                
+                // 추가 주의사항이나 부작용을 bullet point로 찾기
+                if (trimmed.match(/^[-•*]\s+/)) {
+                    const item = trimmed.replace(/^[-•*]\s+/, '').trim();
+                    if (item.length > 5) {
+                        if (medicationInfo.warnings.length < 3) {
+                            medicationInfo.warnings.push(item);
+                        } else if (medicationInfo.sideEffects.length < 3) {
+                            medicationInfo.sideEffects.push(item);
+                        }
+                    }
+                }
+            }
+
+            // 기본값이 없으면 오프라인 정보 사용
+            const defaultInfo = this.getOfflineMedicationInfo(medicationName);
+            
+            if (!medicationInfo.category) medicationInfo.category = defaultInfo.category;
+            if (!medicationInfo.effects) medicationInfo.effects = defaultInfo.effects;
+            if (!medicationInfo.usage) medicationInfo.usage = defaultInfo.usage;
+            if (medicationInfo.warnings.length === 0) medicationInfo.warnings = defaultInfo.warnings;
+            if (medicationInfo.sideEffects.length === 0) medicationInfo.sideEffects = defaultInfo.sideEffects;
+
+            console.log('약물 정보 파싱 완료:', medicationInfo.name);
+
+        } catch (error) {
+            console.error('약물 정보 파싱 오류:', error);
+            medicationInfo = this.getOfflineMedicationInfo(medicationName);
+        }
+
+        return medicationInfo;
+    }
+
+    // 오프라인 약물 정보
+    getOfflineMedicationInfo(medicationName) {
+        const knownMedications = {
+            '타이레놀': {
+                name: '타이레놀',
+                category: '해열진통제',
+                effects: '발열, 두통, 관절통, 근육통 완화',
+                usage: '성인 1회 500-1000mg, 4-6시간마다 복용',
+                warnings: ['간 질환자 주의', '알코올과 함께 복용 금지', '1일 4000mg 초과 금지'],
+                sideEffects: ['메스꺼움', '간 손상 위험', '알레르기 반응']
+            },
+            '아스피린': {
+                name: '아스피린',
+                category: '해열진통소염제',
+                effects: '해열, 진통, 항염, 혈전 예방',
+                usage: '성인 1회 500mg, 4시간마다 복용',
+                warnings: ['위궤양 환자 금기', '출혈 위험 증가', '18세 미만 사용 금지'],
+                sideEffects: ['위장 장애', '출혈', '이명']
+            },
+            '게보린': {
+                name: '게보린',
+                category: '복합 진통제',
+                effects: '두통, 치통, 생리통, 근육통 완화',
+                usage: '성인 1회 1-2정, 1일 3-4회',
+                warnings: ['카페인 함유로 과량 복용 주의', '임산부 사용 금지', '위장 장애 시 주의'],
+                sideEffects: ['위장 불편', '불면', '신경과민']
+            },
+            '펜잘': {
+                name: '펜잘',
+                category: '복합 감기약',
+                effects: '감기 증상 완화 (콧물, 기침, 발열)',
+                usage: '성인 1회 1포, 1일 3회 식후 복용',
+                warnings: ['졸음 유발 가능', '운전 시 주의', '알코올과 병용 금지'],
+                sideEffects: ['졸음', '입마름', '변비']
+            },
+            '낙센': {
+                name: '낙센',
+                category: '소염진통제',
+                effects: '관절염, 근육통, 염좌 등 염증성 통증 완화',
+                usage: '성인 1회 220mg, 1일 2-3회',
+                warnings: ['위궤양 환자 금기', '신장 질환자 주의', '심혈관 위험 증가'],
+                sideEffects: ['위장 장애', '두통', '현기증']
+            },
+            'default': {
+                name: '약물',
+                category: '의약품',
+                effects: '의사나 약사에게 문의하시기 바랍니다',
+                usage: '처방전 또는 포장지의 복용법을 따르세요',
+                warnings: ['의료진과 상담 후 복용', '알레르기 반응 주의', '용법 용량 준수'],
+                sideEffects: ['개인차에 따른 부작용 가능', '알레르기 반응', '위장 장애']
+            }
+        };
+
+        // 약물명 정규화
+        const normalizedName = medicationName.replace(/\s/g, '').toLowerCase();
+        
+        // 매칭되는 약물 찾기
+        for (const [key, value] of Object.entries(knownMedications)) {
+            if (normalizedName.includes(key.toLowerCase()) || 
+                key.toLowerCase().includes(normalizedName)) {
+                return { ...value, generated: new Date().toISOString() };
+            }
+        }
+
+        // 기본값 반환
+        return { 
+            ...knownMedications.default, 
+            name: medicationName,
+            generated: new Date().toISOString() 
+        };
+    }
+
     // Ollama 서버 상태 확인
     async checkOllamaStatus() {
         return new Promise((resolve) => {

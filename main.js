@@ -77,6 +77,20 @@ ipcMain.handle('check-ollama-status', async () => {
   }
 });
 
+// 약물 정보 조회
+ipcMain.handle('get-medication-info', async (event, medicationName, modelName) => {
+  try {
+    console.log(`🏥 약물 정보 조회 요청: ${medicationName} (모델: ${modelName || '기본값'})`);
+    const medicationInfo = await aiService.getMedicationInfo(medicationName, modelName);
+    console.log('✅ 약물 정보 조회 완료:', medicationInfo);
+    return medicationInfo;
+  } catch (error) {
+    console.error('❌ 약물 정보 조회 오류:', error);
+    // 오류 시 오프라인 기본값 반환
+    return aiService.getOfflineMedicationInfo(medicationName);
+  }
+});
+
 // 앱이 준비되면 윈도우 생성
 app.whenReady().then(() => {
   createWindow();
