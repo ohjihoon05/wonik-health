@@ -1,6 +1,6 @@
 {
   "name": "wonik-health",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "원익IPS 직원을 위한 질병별 맞춤 업무 스케줄링 및 AI 추천 시스템",
   "main": "main.js",
   "homepage": "https://github.com/ohjih/wonik-health-planning",

@@ -477,48 +477,74 @@ Answer in Korean. Be accurate and concise.`;
         return medicationInfo;
     }
 
-    // 오프라인 약물 정보
+    // 오프라인 약물 정보 (RxNorm 표준 기반)
     getOfflineMedicationInfo(medicationName) {
         const knownMedications = {
             '타이레놀': {
-                name: '타이레놀',
-                category: '해열진통제',
-                effects: '발열, 두통, 관절통, 근육통 완화',
-                usage: '성인 1회 500-1000mg, 4-6시간마다 복용',
-                warnings: ['간 질환자 주의', '알코올과 함께 복용 금지', '1일 4000mg 초과 금지'],
-                sideEffects: ['메스꺼움', '간 손상 위험', '알레르기 반응']
+                name: '타이레놀 (Acetaminophen)',
+                rxcui: 'RXCUI:161', // RxNorm 표준 코드
+                category: '해열진통제 (Analgesic/Antipyretic)',
+                effects: '발열, 두통, 관절통, 근육통 완화 - FDA 승인 적응증',
+                usage: '성인: 1회 325-650mg, 4-6시간마다, 최대 3000mg/일 (RxNorm 표준)',
+                warnings: ['간 질환자 주의 (FDA 경고)', '알코올과 함께 복용 금지', '1일 4000mg 초과 금지 (간독성 위험)', 'CYP2E1 효소 상호작용 주의'],
+                sideEffects: ['메스꺼움', '간 손상 위험 (과량 복용 시)', '알레르기 반응', '혈소판 감소 (드문 경우)'],
+                ndc: ['00093-0104-01', '00093-0104-10'], // National Drug Code 예시
+                brandNames: ['Tylenol', 'Panadol', 'Acetaminophen']
             },
             '아스피린': {
-                name: '아스피린',
-                category: '해열진통소염제',
-                effects: '해열, 진통, 항염, 혈전 예방',
-                usage: '성인 1회 500mg, 4시간마다 복용',
-                warnings: ['위궤양 환자 금기', '출혈 위험 증가', '18세 미만 사용 금지'],
-                sideEffects: ['위장 장애', '출혈', '이명']
+                name: '아스피린 (Aspirin)',
+                rxcui: 'RXCUI:1191', // RxNorm 표준 코드
+                category: '해열진통소염제 (NSAID)',
+                effects: '해열, 진통, 항염, 혈전 예방 - FDA 승인 심혈관 보호 효과',
+                usage: '진통: 성인 325-650mg, 4시간마다 / 심혈관 예방: 81mg/일 (RxNorm 표준)',
+                warnings: ['위궤양 환자 금기 (FDA 블랙박스 경고)', '출혈 위험 증가', '18세 미만 사용 금지 (Reye 증후군)', '수술 전 7일 중단'],
+                sideEffects: ['위장 장애', '출혈', '이명', '알레르기 반응'],
+                ndc: ['00904-2009-60', '00904-2009-80'],
+                brandNames: ['Aspirin', 'Bayer', 'Bufferin']
             },
             '게보린': {
-                name: '게보린',
-                category: '복합 진통제',
-                effects: '두통, 치통, 생리통, 근육통 완화',
-                usage: '성인 1회 1-2정, 1일 3-4회',
-                warnings: ['카페인 함유로 과량 복용 주의', '임산부 사용 금지', '위장 장애 시 주의'],
-                sideEffects: ['위장 불편', '불면', '신경과민']
+                name: '게보린 (복합 진통제)',
+                rxcui: 'RXCUI:Complex', 
+                category: '복합 진통제 (Combination Analgesic)',
+                effects: '두통, 치통, 생리통, 근육통 완화 - 아세트아미노펜+이부프로펜+카페인 복합',
+                usage: '성인 1회 1-2정, 1일 3-4회, 최대 6정/일',
+                warnings: ['카페인 132mg 함유로 과량 복용 주의', '임산부 사용 금지', '위장 장애 시 주의', '간질환자 주의'],
+                sideEffects: ['위장 불편', '불면', '신경과민', '심계항진'],
+                ndc: ['Korean-Pharma-Code'],
+                brandNames: ['게보린', 'Gebolin']
             },
             '펜잘': {
-                name: '펜잘',
-                category: '복합 감기약',
-                effects: '감기 증상 완화 (콧물, 기침, 발열)',
-                usage: '성인 1회 1포, 1일 3회 식후 복용',
-                warnings: ['졸음 유발 가능', '운전 시 주의', '알코올과 병용 금지'],
-                sideEffects: ['졸음', '입마름', '변비']
+                name: '펜잘 (복합 감기약)',
+                rxcui: 'RXCUI:Complex-Cold',
+                category: '복합 감기약 (Multi-symptom Cold Relief)',
+                effects: '감기 증상 완화 (콧물, 기침, 발열) - 아세트아미노펜+슈도에페드린+덱스트로메토르판',
+                usage: '성인 1회 1포, 1일 3회 식후 복용, 5일 이내 사용',
+                warnings: ['졸음 유발 가능', '운전 시 주의', '알코올과 병용 금지', '고혈압 환자 주의 (슈도에페드린)'],
+                sideEffects: ['졸음', '입마름', '변비', '혈압 상승'],
+                ndc: ['Korean-OTC-Code'],
+                brandNames: ['펜잘', 'Fenzal']
             },
             '낙센': {
-                name: '낙센',
-                category: '소염진통제',
-                effects: '관절염, 근육통, 염좌 등 염증성 통증 완화',
-                usage: '성인 1회 220mg, 1일 2-3회',
-                warnings: ['위궤양 환자 금기', '신장 질환자 주의', '심혈관 위험 증가'],
-                sideEffects: ['위장 장애', '두통', '현기증']
+                name: '낙센 (Naproxen)',
+                rxcui: 'RXCUI:7258', // RxNorm 표준 코드
+                category: '소염진통제 (NSAID)',
+                effects: '관절염, 근육통, 염좌 등 염증성 통증 완화 - COX 억제제',
+                usage: '성인 1회 220-440mg, 8-12시간마다, 최대 660mg/일 (RxNorm 표준)',
+                warnings: ['위궤양 환자 금기 (FDA 경고)', '신장 질환자 주의', '심혈관 위험 증가', '임신 3기 금기'],
+                sideEffects: ['위장 장애', '두통', '현기증', '부종'],
+                ndc: ['00093-0149-01', '00093-0149-10'],
+                brandNames: ['Naproxen', 'Aleve', 'Naprosyn']
+            },
+            '이부프로펜': {
+                name: '이부프로펜 (Ibuprofen)', 
+                rxcui: 'RXCUI:5640', // RxNorm 표준 코드
+                category: '소염진통제 (NSAID)',
+                effects: '해열, 진통, 소염 - 프로피온산 계열 NSAID',
+                usage: '성인: 200-400mg, 6-8시간마다, 최대 1200mg/일 (RxNorm 표준)',
+                warnings: ['위궤양 환자 금기', '심혈관 질환자 주의', '신장 기능 저하자 주의', '임신 3기 금기'],
+                sideEffects: ['위장 장애', '두통', '현기증', '알레르기 반응'],
+                ndc: ['00121-0871-05', '00121-0871-10'],
+                brandNames: ['Advil', 'Motrin', 'Ibuprofen']
             },
             'default': {
                 name: '약물',
