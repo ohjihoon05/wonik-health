@@ -1,4 +1,4 @@
-const { contextBridge } = require('electron');
+const { contextBridge, ipcRenderer } = require('electron');
 
 // 안전한 API만 HTML에서 사용할 수 있도록 노출
 contextBridge.exposeInMainWorld('electronAPI', {
@@ -21,6 +21,21 @@ contextBridge.exposeInMainWorld('electronAPI', {
   
   // 브라우저 환경 체크
   isElectron: true,
+  
+  // AI 추천 API
+  getAIRecommendation: async (diseaseName, modelName) => {
+    return await ipcRenderer.invoke('get-ai-recommendation', diseaseName, modelName);
+  },
+  
+  // Ollama 모델 목록 가져오기
+  getOllamaModels: async () => {
+    return await ipcRenderer.invoke('get-ollama-models');
+  },
+  
+  // Ollama 상태 확인
+  checkOllamaStatus: async () => {
+    return await ipcRenderer.invoke('check-ollama-status');
+  },
   
   // localStorage는 웹 표준이므로 직접 사용 가능
   // 추가 보안 계층이 필요한 경우에만 래퍼 생성

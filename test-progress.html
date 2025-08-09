@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>프로그레스바 테스트</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            padding: 50px;
+            background: #f5f5f5;
+        }
+        
+        /* 간단한 프로그레스바 스타일 */
+        .simple-progress {
+            width: 100%;
+            max-width: 500px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .progress-wrapper {
+            width: 100%;
+            height: 20px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50, #45a049);
+            transition: width 0.3s ease;
+            border-radius: 10px;
+        }
+        
+        .progress-text {
+            text-align: center;
+            margin: 10px 0;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        button {
+            padding: 10px 20px;
+            background: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        
+        button:hover {
+            background: #1976D2;
+        }
+    </style>
+</head>
+<body>
+    <div class="simple-progress">
+        <h2>프로그레스바 테스트</h2>
+        
+        <div class="progress-wrapper">
+            <div class="progress-bar" id="progress" style="width: 0%"></div>
+        </div>
+        
+        <div class="progress-text" id="progress-text">준비 중...</div>
+        
+        <button onclick="startProgress()">시작</button>
+        <button onclick="resetProgress()">초기화</button>
+    </div>
+    
+    <script>
+        let currentProgress = 0;
+        let progressInterval;
+        
+        function updateProgress(percent, text) {
+            const progressBar = document.getElementById('progress');
+            const progressText = document.getElementById('progress-text');
+            
+            progressBar.style.width = percent + '%';
+            progressText.textContent = text + ' (' + Math.round(percent) + '%)';
+        }
+        
+        function startProgress() {
+            resetProgress();
+            
+            // 단계별 프로그레스
+            const steps = [
+                { percent: 10, text: '연결 확인 중', delay: 500 },
+                { percent: 30, text: '서버 준비 중', delay: 1000 },
+                { percent: 50, text: 'AI 모델 로딩', delay: 1500 },
+                { percent: 70, text: '데이터 처리 중', delay: 2000 },
+                { percent: 90, text: '마무리 중', delay: 500 },
+                { percent: 100, text: '완료!', delay: 500 }
+            ];
+            
+            let currentStep = 0;
+            
+            function nextStep() {
+                if (currentStep < steps.length) {
+                    const step = steps[currentStep];
+                    updateProgress(step.percent, step.text);
+                    currentStep++;
+                    
+                    if (currentStep < steps.length) {
+                        setTimeout(nextStep, step.delay);
+                    }
+                }
+            }
+            
+            nextStep();
+        }
+        
+        function resetProgress() {
+            clearInterval(progressInterval);
+            updateProgress(0, '준비 중...');
+        }
+    </script>
+</body>
+</html>

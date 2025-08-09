@@ -1,5 +1,6 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
+const AIRecommendationService = require('./ai-recommendations');
 
 // 메인 윈도우 생성 함수
 function createWindow() {
@@ -38,6 +39,43 @@ function createWindow() {
     return { action: 'deny' };
   });
 }
+
+// AI 추천 서비스 인스턴스
+const aiService = new AIRecommendationService();
+
+// IPC 핸들러 설정
+ipcMain.handle('get-ai-recommendation', async (event, diseaseName, modelName) => {
+  try {
+    console.log(`🤖 AI 추천 요청: ${diseaseName} (모델: ${modelName || '기본값'})`);
+    const recommendation = await aiService.getRecommendation(diseaseName, modelName);
+    console.log('✅ AI 추천 완료:', recommendation);
+    return { success: true, data: recommendation };
+  } catch (error) {
+    console.error('❌ AI 추천 오류:', error);
+    return { success: false, error: error.message };
+  }
+});
+
+// Ollama 모델 목록 가져오기
+ipcMain.handle('get-ollama-models', async () => {
+  try {
+    const models = await aiService.getAvailableModels();
+    return { success: true, models: models };
+  } catch (error) {
+    console.error('❌ 모델 목록 조회 오류:', error);
+    return { success: false, models: [] };
+  }
+});
+
+// Ollama 상태 확인
+ipcMain.handle('check-ollama-status', async () => {
+  try {
+    const isAvailable = await aiService.checkOllamaStatus();
+    return { success: true, available: isAvailable };
+  } catch (error) {
+    return { success: false, available: false };
+  }
+});
 
 // 앱이 준비되면 윈도우 생성
 app.whenReady().then(() => {

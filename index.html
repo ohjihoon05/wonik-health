@@ -783,6 +783,177 @@
             margin-top: 16px;
             color: #374151;
         }
+        
+        /* AI 설정 영역 스타일 */
+        .ai-settings {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 16px 0;
+        }
+        
+        .ai-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        
+        .ai-status {
+            font-size: 0.875rem;
+            padding: 8px 12px;
+            background: #f3f4f6;
+            border-radius: 6px;
+            display: inline-block;
+        }
+        
+        .ai-status.connected {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .ai-status.disconnected {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        
+        /* AI 추천 스타일 */
+        .ai-recommendation {
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 12px;
+        }
+        
+        .ai-label {
+            color: #0369a1;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        
+        .recommendation-list {
+            list-style: none;
+            padding: 0;
+            margin: 8px 0;
+        }
+        
+        .recommendation-list li {
+            padding: 8px 0;
+            padding-left: 24px;
+            position: relative;
+            line-height: 1.6;
+        }
+        
+        .recommendation-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #10b981;
+            font-weight: bold;
+        }
+        
+        .ai-note {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-top: 12px;
+            font-style: italic;
+        }
+        
+        /* 프로그레스바 스타일 - 개선된 버전 */
+        .progress-container {
+            margin: 24px 0;
+            padding: 16px;
+            background: #f9fafb;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: #e5e7eb;
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%);
+            width: 0%;
+            border-radius: 6px;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+        }
+        
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                90deg,
+                transparent 0%,
+                rgba(255, 255, 255, 0.3) 50%,
+                transparent 100%
+            );
+            animation: shimmer 1.5s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .progress-text {
+            text-align: center;
+            margin-top: 12px;
+            font-size: 0.875rem;
+            color: #4b5563;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .progress-percentage {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #3b82f6;
+            margin-left: 8px;
+        }
+        
+        /* 로딩 스피너 */
+        .loading-spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #e5e7eb;
+            border-top-color: #3b82f6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .ai-error {
+            background: #fee2e2;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 12px;
+        }
 
         .time-inputs {
             display: flex;
@@ -1117,6 +1288,21 @@
                 <div class="main-scheduling-area">
                     <h3>🏥 질병별 맞춤 업무 스케줄링</h3>
                     
+                    <!-- AI 설정 영역 -->
+                    <div class="ai-settings">
+                        <h4>🤖 AI 설정</h4>
+                        <div class="ai-controls">
+                            <label for="ollama-model-select">AI 모델 선택:</label>
+                            <select id="ollama-model-select" class="form-input" style="width: 200px;">
+                                <option value="">모델 로딩중...</option>
+                            </select>
+                            <button id="refresh-models-btn" class="btn btn-secondary">🔄 새로고침</button>
+                        </div>
+                        <div class="ai-status" id="ai-status">
+                            <span>⚪ Ollama 상태 확인중...</span>
+                        </div>
+                    </div>
+                    
                     <!-- 질병 선택 -->
                     <div class="disease-selection">
                         <h4>📋 질병 선택</h4>
@@ -1155,7 +1341,7 @@
                         </div>
                         
                         <div id="selected-disease-info" class="selected-info">
-                            질병을 선택하면 맞춤 스케줄이 표시됩니다.
+                            질병을 선택하면 AI가 맞춤 스케줄을 생성합니다.
                         </div>
                     </div>
 
@@ -2108,6 +2294,227 @@
             });
         }
 
+        // 선택된 모델로 AI 추천 받기
+        let selectedModel = null;
+        
+        // AI 초기화 함수
+        async function initializeAI() {
+            // Ollama 상태 확인
+            const statusResult = await window.electronAPI.checkOllamaStatus();
+            const statusEl = document.getElementById('ai-status');
+            
+            if (statusResult.success && statusResult.available) {
+                statusEl.className = 'ai-status connected';
+                statusEl.innerHTML = '<span>🟢 Ollama 연결됨</span>';
+                
+                // 모델 목록 로드
+                await loadOllamaModels();
+            } else {
+                statusEl.className = 'ai-status disconnected';
+                statusEl.innerHTML = '<span>🔴 Ollama 연결 실패 (기본 권장사항 사용)</span>';
+            }
+        }
+        
+        // Ollama 모델 목록 로드
+        async function loadOllamaModels() {
+            const selectEl = document.getElementById('ollama-model-select');
+            
+            try {
+                const result = await window.electronAPI.getOllamaModels();
+                
+                if (result.success && result.models.length > 0) {
+                    selectEl.innerHTML = '<option value="">모델을 선택하세요</option>';
+                    
+                    result.models.forEach(model => {
+                        const option = document.createElement('option');
+                        option.value = model.name;
+                        option.textContent = `${model.name} (${model.details.parameter_size})`;
+                        selectEl.appendChild(option);
+                    });
+                    
+                    // 첫 번째 모델을 기본값으로 선택
+                    if (result.models.length > 0) {
+                        selectEl.value = result.models[0].name;
+                        selectedModel = result.models[0].name;
+                    }
+                } else {
+                    selectEl.innerHTML = '<option value="">사용 가능한 모델 없음</option>';
+                }
+            } catch (error) {
+                console.error('모델 목록 로드 오류:', error);
+                selectEl.innerHTML = '<option value="">모델 로드 실패</option>';
+            }
+        }
+        
+        // AI 추천 받기 함수
+        async function getAIRecommendation(diseaseName, diseaseInfo, useSelectedModel = false) {
+            console.log(`🚨🚨🚨 getAIRecommendation 함수가 호출되었습니다!`);
+            console.log(`질병명: ${diseaseName}`);
+            console.log(`질병 정보:`, diseaseInfo);
+            console.log(`선택된 모델 사용: ${useSelectedModel}`);
+            
+            const selectedInfo = document.getElementById('selected-disease-info');
+            
+            if (!selectedInfo) {
+                console.error('❌ selected-disease-info 요소를 찾을 수 없습니다!');
+                return;
+            }
+            
+            console.log(`🎯 AI 추천 시작: ${diseaseName}`);
+            
+            // 프로그레스바 HTML 생성
+            selectedInfo.innerHTML = `
+                <h5>🏥 ${diseaseName}</h5>
+                <p>🤖 AI가 맞춤 권장사항을 생성중입니다...</p>
+                <div style="margin: 20px 0; padding: 15px; background: #f9fafb; border-radius: 8px; border: 1px solid #e5e7eb;">
+                    <div style="width: 100%; height: 20px; background: #e5e7eb; border-radius: 10px; overflow: hidden;">
+                        <div id="ai-progress" style="height: 100%; background: linear-gradient(90deg, #3b82f6, #8b5cf6); width: 0%; transition: width 0.3s ease; border-radius: 10px;"></div>
+                    </div>
+                    <div style="text-align: center; margin-top: 10px; font-size: 14px; color: #4b5563;">
+                        <span id="progress-status">초기화 중...</span>
+                        <span style="margin-left: 10px; font-weight: bold; color: #3b82f6;" id="progress-percent">0%</span>
+                    </div>
+                </div>
+            `;
+            
+            // 간단한 프로그레스 업데이트 함수
+            function simpleUpdateProgress(percent, text) {
+                const progressBar = document.getElementById('ai-progress');
+                const progressStatus = document.getElementById('progress-status');
+                const progressPercent = document.getElementById('progress-percent');
+                
+                if (progressBar) progressBar.style.width = percent + '%';
+                if (progressStatus) progressStatus.textContent = text;
+                if (progressPercent) progressPercent.textContent = Math.round(percent) + '%';
+                
+                console.log(`📊 Progress: ${percent}% - ${text}`);
+            }
+            
+            // 초기 프로그레스
+            simpleUpdateProgress(5, '시작 중...');
+            
+            try {
+                // Ollama 상태 확인
+                await new Promise(resolve => setTimeout(resolve, 300));
+                simpleUpdateProgress(15, 'Ollama 서버 확인중...');
+                
+                // electronAPI 존재 여부 확인
+                if (!window.electronAPI) {
+                    console.warn('⚠️ electronAPI가 없습니다. 브라우저 환경에서는 기본값을 사용합니다.');
+                    simpleUpdateProgress(100, '브라우저 환경 - 기본값 사용');
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    showDefaultRecommendation(diseaseInfo);
+                    return;
+                }
+                
+                const statusResult = await window.electronAPI.checkOllamaStatus();
+                
+                if (statusResult.success && statusResult.available) {
+                    simpleUpdateProgress(30, '모델 준비중...');
+                    await new Promise(resolve => setTimeout(resolve, 200));
+                    
+                    // 모델 선택
+                    const selectedModel = document.getElementById('ollama-model-select').value;
+                    const modelToUse = useSelectedModel ? selectedModel : null;
+                    
+                    simpleUpdateProgress(45, 'AI 분석 시작...');
+                    await new Promise(resolve => setTimeout(resolve, 300));
+                    simpleUpdateProgress(60, 'AI 추천 생성중...');
+                    
+                    // 타임아웃 설정 (40초)
+                    const timeoutPromise = new Promise((_, reject) => {
+                        setTimeout(() => reject(new Error('AI 응답 시간 초과')), 40000);
+                    });
+                    
+                    // 프로그레스 업데이트 (AI 처리 중)
+                    let aiProgress = 60;
+                    const progressTimer = setInterval(() => {
+                        if (aiProgress < 95) {
+                            aiProgress += Math.random() * 5;
+                            simpleUpdateProgress(Math.min(aiProgress, 95), 'AI가 분석 중입니다...');
+                        }
+                    }, 800);
+                    
+                    // Ollama가 사용 가능한 경우 AI 추천 요청
+                    const result = await Promise.race([
+                        window.electronAPI.getAIRecommendation(diseaseName, modelToUse),
+                        timeoutPromise
+                    ]);
+                    
+                    clearInterval(progressTimer);
+                    simpleUpdateProgress(100, '완료!');
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                    
+                    if (result.success && result.data) {
+                        const recommendation = result.data;
+                        selectedInfo.innerHTML = `
+                            <h5>🏥 ${diseaseName}</h5>
+                            <div class="ai-recommendation">
+                                <p class="ai-label">🤖 AI 맞춤 권장사항</p>
+                                <p><strong>📅 권장 패턴:</strong> ${recommendation.pattern}</p>
+                                <p><strong>⏱️ 업무/휴식:</strong> ${recommendation.schedule}</p>
+                                <p><strong>💡 권장사항:</strong></p>
+                                <ul class="recommendation-list">
+                                    ${recommendation.tips.map(tip => `<li>${tip}</li>`).join('')}
+                                </ul>
+                                <p class="ai-note">✨ Ollama AI로 생성된 맞춤형 권장사항입니다</p>
+                            </div>
+                        `;
+                    } else {
+                        // AI 추천 실패 시 기본값 사용
+                        clearInterval(progressTimer);
+                        setProgress(100, '기본값 사용');
+                        await new Promise(resolve => setTimeout(resolve, 300));
+                        selectedInfo.innerHTML = `
+                            <h5>🏥 ${diseaseName}</h5>
+                            <div class="ai-error">
+                                ⚠️ AI 생성 실패: ${result.error || '알 수 없는 오류'}
+                            </div>
+                        `;
+                        setTimeout(() => showDefaultRecommendation(diseaseInfo), 2000);
+                    }
+                } else {
+                    // Ollama를 사용할 수 없는 경우 기본값 사용
+                    simpleUpdateProgress(100, 'Ollama 연결 실패');
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                    console.log('⚠️ Ollama를 사용할 수 없어 기본 권장사항을 표시합니다.');
+                    
+                    selectedInfo.innerHTML = `
+                        <h5>🏥 ${diseaseName}</h5>
+                        <div class="ai-error">
+                            ⚠️ Ollama 서버에 연결할 수 없습니다. 기본 권장사항을 표시합니다.
+                        </div>
+                    `;
+                    setTimeout(() => showDefaultRecommendation(diseaseInfo), 2000);
+                }
+            } catch (error) {
+                simpleUpdateProgress(100, '오류 발생');
+                await new Promise(resolve => setTimeout(resolve, 300));
+                console.error('AI 추천 오류:', error);
+                
+                selectedInfo.innerHTML = `
+                    <h5>🏥 ${diseaseName}</h5>
+                    <div class="ai-error">
+                        ⚠️ ${error.message === 'AI 응답 시간 초과' ? 'AI 응답 시간이 초과되었습니다. (40초)' : `오류 발생: ${error.message}`}
+                    </div>
+                `;
+                setTimeout(() => showDefaultRecommendation(diseaseInfo), 2000);
+            }
+        }
+        
+        // 기본 권장사항 표시 함수
+        function showDefaultRecommendation(diseaseInfo) {
+            const selectedInfo = document.getElementById('selected-disease-info');
+            selectedInfo.innerHTML = `
+                <h5>🏥 ${diseaseInfo.name}</h5>
+                <p>${diseaseInfo.description || ''}</p>
+                <p><strong>📅 권장 패턴:</strong> ${diseaseInfo.workPattern || '50분 업무 → 10분 휴식'}</p>
+                <p><strong>⏱️ 업무/휴식:</strong> ${diseaseInfo.workDuration || 50}분 업무 → ${diseaseInfo.restDuration || 10}분 휴식</p>
+                <p><strong>💡 권장사항:</strong> ${diseaseInfo.recommendations ? diseaseInfo.recommendations.join(', ') : '규칙적인 휴식, 적절한 운동, 충분한 수면'}</p>
+                <p class="ai-note">💡 Ollama AI 연결 시 더 정확한 맞춤 권장사항을 제공합니다</p>
+            `;
+        }
+        
         // 사용자 정의 질병 목록 렌더링
         function renderCustomDiseases() {
             const customList = document.getElementById('custom-disease-list');
@@ -2156,17 +2563,26 @@
 
                     // 질병 정보 표시
                     if (diseaseInfo) {
+                        // 로딩 표시
                         selectedInfo.innerHTML = `
                             <h5>🏥 ${diseaseInfo.name}</h5>
-                            <p>${diseaseInfo.description}</p>
-                            <p><strong>📅 권장 패턴:</strong> ${diseaseInfo.workPattern}</p>
-                            <p><strong>⏱️ 업무/휴식:</strong> ${diseaseInfo.workDuration}분 업무 → ${diseaseInfo.restDuration}분 휴식</p>
-                            <p><strong>💡 권장사항:</strong> ${diseaseInfo.recommendations.join(', ')}</p>
+                            <p>🤖 AI가 맞춤 권장사항을 생성중입니다...</p>
                         `;
+                        
+                        // AI 생성 버튼 숨기기 (존재하는 경우에만)
+                        const aiControls = document.getElementById('ai-recommendation-controls');
+                        if (aiControls) {
+                            aiControls.style.display = 'none';
+                        }
                         
                         // 선택된 질병 정보 저장
                         window.selectedDiseaseInfo = diseaseInfo;
                         console.log(`🏥 ${diseaseInfo.name} 질병이 선택되었습니다.`);
+                        console.log(`🔥 지금 getAIRecommendation 함수를 호출합니다!`);
+                        
+                        // 바로 AI 추천 생성 (선택된 모델 사용)
+                        getAIRecommendation(diseaseInfo.name, diseaseInfo, true);
+                        console.log(`✅ getAIRecommendation 함수 호출 완료!`);
                     }
                 });
             });
@@ -2495,6 +2911,20 @@
 
         // 페이지 로드 시 초기화
         window.addEventListener('DOMContentLoaded', () => {
+            // AI 초기화
+            initializeAI();
+            
+            // AI 이벤트 리스너 설정
+            document.getElementById('refresh-models-btn').addEventListener('click', () => {
+                initializeAI();
+            });
+            
+            document.getElementById('ollama-model-select').addEventListener('change', (e) => {
+                selectedModel = e.target.value;
+                console.log('🤖 선택된 모델:', selectedModel);
+            });
+            
+            
             // 탭 기능 초기화
             initTabs();
             
