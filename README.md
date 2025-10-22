@@ -125,8 +125,32 @@
 - 스케줄 준수율: 목표 75% 이상
 - 개인화 정확도: 목표 90% 이상
 
+## 🖥️ PC 설치 방법
+
+### 빠른 시작
+```bash
+# 1. Node.js 설치 (https://nodejs.org/)
+# 2. 프로젝트 클론
+git clone https://github.com/ohjihoon05/wonik-health.git
+cd wonik-health
+
+# 3. 의존성 설치
+npm install
+
+# 4. Windows 설치 파일 빌드
+npm run build:win
+```
+
+### 상세 설치 가이드
+👉 **[완전한 PC 설치 가이드 보기](./INSTALL_GUIDE.md)**
+
+생성되는 파일:
+- `dist/WonikHealth-Setup-1.2.0.exe` - 설치 프로그램 (권장)
+- `dist/WonikHealth-Portable-1.2.0.exe` - 포터블 버전
+
 ## 📂 프로젝트 문서
 
+- **[PC 설치 가이드](./INSTALL_GUIDE.md)**: Windows PC에 앱 설치하는 방법
 - **[기술 스택 및 아키텍처](./TECH_STACK.md)**: 상세한 기술 구조 및 데이터베이스 설계
 - **[UI/UX 와이어프레임](./UI_WIREFRAME.md)**: 화면별 상세 설계 및 디자인 가이드
 - **[개발 로드맵](./ROADMAP.md)**: 16주 개발 일정 및 마일스톤
